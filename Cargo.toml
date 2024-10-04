@@ -1,0 +1,9 @@
+[workspace]
+resolver = "2"
+members = [
+    "__test__",
+    "package",
+]
+
+[workspace.dependencies]
+jder_axum = { path = "./package" }

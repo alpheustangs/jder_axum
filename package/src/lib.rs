@@ -1,0 +1,123 @@
+//! # JDER Axum
+//!
+//! A JDER builder for Axum.
+//!
+//! This package includes several Axum response builders and different
+//! extractors based on the JSON response structure specified in
+//! [JSON Data Error Response (JDER)](https://github.com/alpheustangs/jder).
+//! With the builders and extractors provided, various kinds of
+//! responses can be created easily instead of sending plain text responses.
+//!
+//! ## Usage
+//!
+//! To create a JSON response, use
+//! [`CreateJsonResponse`](response::CreateJsonResponse):
+//!
+//! ```no_run
+//! use jder_axum::response::{
+//!     Response,
+//!     CreateJsonResponse
+//! };
+//! use serde::Serialize;
+//!
+//! #[derive(Default, Serialize)]
+//! struct RouteResponseData {
+//!    title: &'static str,
+//! }
+//!
+//! async fn route() -> Response {
+//!     CreateJsonResponse::success::<RouteResponseData>()
+//!         .data(RouteResponseData {
+//!             title: "Title"
+//!         })
+//!         .send()
+//! }
+//! ```
+//!
+//! If no data is needed, use
+//! [`dataless`](response::CreateJsonResponse::dataless)
+//! function instead:
+//!
+//! ```no_run
+//! use jder_axum::response::{
+//!     Response,
+//!     CreateJsonResponse
+//! };
+//!
+//! async fn route() -> Response {
+//!     CreateJsonResponse::dataless().send()
+//! }
+//! ```
+//!
+//! For returning content other than JSON, use
+//! [`CreateResponse`](response::CreateResponse):
+//!
+//! ```no_run
+//! use axum::http::header;
+//! use jder_axum::response::{
+//!     Response,
+//!     CreateResponse
+//! };
+//! use serde::Serialize;
+//!
+//! async fn route() -> Response {
+//!     CreateResponse::success()
+//!         .header(header::CONTENT_TYPE, "text/plain".to_string())
+//!         .body("hi")
+//! }
+//! ```
+
+mod utils;
+
+/// Extract module contains different extractors.
+pub mod extract {
+    pub use crate::utils::extract::connect_info::ConnectInfo;
+
+    pub use crate::utils::extract::host::Host;
+
+    pub use crate::utils::extract::json::Json;
+
+    pub use crate::utils::extract::matched_path::MatchedPath;
+
+    pub use crate::utils::extract::multipart::Multipart;
+
+    /// Multipart extractor module.
+    pub mod multipart {
+        pub use crate::utils::extract::multipart::{
+            Multipart, MultipartFailureResponse,
+        };
+    }
+
+    pub use crate::utils::extract::nested_path::NestedPath;
+
+    pub use crate::utils::extract::original_uri::OriginalUri;
+
+    pub use crate::utils::extract::path::Path;
+
+    pub use crate::utils::extract::query::Query;
+
+    /// Query extractor module.
+    pub mod query {
+        pub use crate::utils::extract::query::{empty_to_none, Query};
+    }
+
+    pub use crate::utils::extract::state::State;
+}
+
+/// Response module contains different response functions.
+pub mod response {
+    // Base
+    pub use crate::utils::response::{
+        CreateResponse, Response, ResponseFunctions,
+    };
+
+    // JSON
+    pub use crate::utils::response::json::failure::JsonFailureResponseFunctions;
+    pub use crate::utils::response::json::success::JsonSuccessResponseFunctions;
+    pub use crate::utils::response::json::{
+        CreateJsonResponse, JsonResponse, JsonResponseError,
+    };
+
+    // Others
+    pub use crate::utils::response::error::ResponseErrorCode;
+}
