@@ -6,7 +6,7 @@ publish = false
 [dependencies]
 axum = { version = "~0.7.7", features = ["multipart"] }
 axum-test = "^16.2.0"
-axum_typed_multipart = "~0.13.0"
+axum_typed_multipart = "~0.13.1"
 jder_axum = { workspace = true }
 tokio = { version = "^1.40.0", features = ["full"] }
 serde = "^1.0.210"
