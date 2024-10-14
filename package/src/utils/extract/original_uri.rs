@@ -5,7 +5,8 @@ use axum::{
 };
 
 use crate::utils::response::{
-    error::ResponseErrorCode, json::CreateJsonResponse, Response,
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
+    Response,
 };
 
 /// Extractor that gets the original request URI regardless of nesting.
@@ -55,8 +56,8 @@ where
             | Ok(value) => Ok(Self(value.0)),
             | Err(rejection) => Err(CreateJsonResponse::failure()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .error_code(ResponseErrorCode::ServerError.to_string())
-                .error_message(rejection.to_string())
+                .error_code(JsonResponseErrorCode::Server.as_str())
+                .error_message(&rejection.to_string())
                 .send()),
         }
     }

@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod test {
     use axum_test::TestServer;
-    use jder_axum::response::{JsonResponse, ResponseErrorCode};
+    use jder_axum::response::json::{JsonResponse, JsonResponseErrorCode};
 
     use crate::router::create_server;
     use crate::router::nested_path::RouteNestedPathResponseData;
@@ -16,7 +16,7 @@ mod test {
         assert_eq!(res.success, false);
         assert_eq!(
             res.error.unwrap().code,
-            ResponseErrorCode::ServerError.to_string()
+            JsonResponseErrorCode::Server.to_string()
         );
     }
 

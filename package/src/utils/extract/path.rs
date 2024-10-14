@@ -9,8 +9,10 @@ use axum::{
 use serde::de::DeserializeOwned;
 
 use crate::utils::response::{
-    error::ResponseErrorCode,
-    json::{failure::JsonFailureResponseFunctions, CreateJsonResponse},
+    json::{
+        error::JsonResponseErrorCode, failure::JsonFailureResponseFunctions,
+        CreateJsonResponse,
+    },
     Response,
 };
 
@@ -74,27 +76,25 @@ where
                     let res: JsonFailureResponseFunctions<()> =
                         CreateJsonResponse::failure()
                             .status(status)
-                            .error_code(
-                                ResponseErrorCode::ParseError.to_string(),
-                            )
-                            .error_message(kind.to_string());
+                            .error_code(JsonResponseErrorCode::Parse.as_str())
+                            .error_message(&kind.to_string());
 
                     match field {
-                        | Some(field) => res.error_field(field).send(),
+                        | Some(field) => res.error_field(&field).send(),
                         | None => res.send(),
                     }
                 },
                 | PathRejection::MissingPathParams(inner) => {
                     CreateJsonResponse::failure()
                         .status(inner.status())
-                        .error_code(ResponseErrorCode::ParseError.to_string())
-                        .error_message(inner.to_string())
+                        .error_code(JsonResponseErrorCode::Parse.as_str())
+                        .error_message(&inner.body_text())
                         .send()
                 },
                 | _ => CreateJsonResponse::failure()
                     .status(StatusCode::INTERNAL_SERVER_ERROR)
-                    .error_code(ResponseErrorCode::ServerError.to_string())
-                    .error_message(rejection.to_string())
+                    .error_code(JsonResponseErrorCode::Server.as_str())
+                    .error_message(&rejection.body_text())
                     .send(),
             }),
         }

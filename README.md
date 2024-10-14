@@ -19,7 +19,7 @@ Create a JSON response for an Axum route:
 ```rust
 use jder_axum::response::{
     Response,
-    CreateJsonResponse,
+    json::CreateJsonResponse,
 };
 
 async fn route() -> Response {

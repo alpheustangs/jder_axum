@@ -1,6 +1,6 @@
 use jder_axum::{
     extract::NestedPath,
-    response::{CreateJsonResponse, Response},
+    response::{json::CreateJsonResponse, Response},
 };
 use serde::{Deserialize, Serialize};
 

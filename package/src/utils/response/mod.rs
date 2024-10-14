@@ -1,25 +1,28 @@
-pub mod error;
+pub mod header;
 pub mod json;
 
 use axum::{
     body::Body,
     http::{
-        response::Builder, HeaderName, Response as _Response, StatusCode,
-        Version,
+        response::Builder, Error as HTTPError, HeaderMap, HeaderName,
+        HeaderValue, Response as _Response, StatusCode, Version,
     },
 };
 
-/// Response type for routes.
+/// Response for routes.
 pub type Response<B = Body> = _Response<B>;
 
+/// Internal state.
+#[derive(Debug, Clone)]
 struct ResponseState<B> {
     status: StatusCode,
     version: Version,
-    headers: Vec<(HeaderName, String)>,
+    header_map: HeaderMap,
     body: B,
 }
 
 /// Functions for creating response.
+#[derive(Debug, Clone)]
 pub struct ResponseFunctions<B> {
     state: ResponseState<B>,
 }
@@ -42,7 +45,7 @@ where
     /// async fn route() -> Response {
     ///     CreateResponse::success()
     ///         .status(StatusCode::CREATED)
-    ///         .body("created".to_string())
+    ///         .body("created")
     /// }
     /// ```
     pub fn status(
@@ -50,6 +53,7 @@ where
         status: StatusCode,
     ) -> Self {
         self.state.status = status;
+
         self
     }
 
@@ -67,7 +71,7 @@ where
     /// async fn route() -> Response {
     ///     CreateResponse::success()
     ///         .version(Version::HTTP_3)
-    ///         .body("active".to_string())
+    ///         .body("active")
     /// }
     /// ```
     pub fn version(
@@ -75,6 +79,7 @@ where
         version: Version,
     ) -> Self {
         self.state.version = version;
+
         self
     }
 
@@ -93,17 +98,32 @@ where
     ///     CreateResponse::success()
     ///         .header(
     ///             header::CONTENT_TYPE,
-    ///             "text/plain".to_string()
+    ///             "text/plain"
     ///         )
-    ///         .body("active".to_string())
+    ///         .body("active")
     /// }
     /// ```
-    pub fn header(
+    pub fn header<K, V>(
         mut self,
-        header: HeaderName,
-        value: String,
-    ) -> Self {
-        self.state.headers.push((header, value));
+        key: K,
+        value: V,
+    ) -> Self
+    where
+        HeaderName: TryFrom<K>,
+        <HeaderName as TryFrom<K>>::Error: Into<HTTPError>,
+        HeaderValue: TryFrom<V>,
+        <HeaderValue as TryFrom<V>>::Error: Into<HTTPError>,
+    {
+        let key: HeaderName = <HeaderName as TryFrom<K>>::try_from(key)
+            .map_err(Into::into)
+            .unwrap();
+
+        let value: HeaderValue = <HeaderValue as TryFrom<V>>::try_from(value)
+            .map_err(Into::into)
+            .unwrap();
+
+        self.state.header_map.try_append(key, value).unwrap();
+
         self
     }
 
@@ -123,27 +143,36 @@ where
     ///
     /// async fn route() -> Response {
     ///
-    ///     let headers: Vec<(HeaderName, String)> = vec![
+    ///     let headers: Vec<(HeaderName, &str)> = vec![
     ///         (
     ///             header::ACCESS_CONTROL_ALLOW_ORIGIN,
-    ///             "*".to_string()
+    ///             "*"
     ///         ),
     ///         (
     ///             header::CONTENT_TYPE,
-    ///             "text/plain".to_string()
+    ///             "text/plain"
     ///         ),
     ///     ];
     ///
     ///     CreateResponse::success()
     ///         .headers(headers)
-    ///         .body("active".to_string())
+    ///         .body("active")
     /// }
     /// ```
-    pub fn headers(
+    pub fn headers<K, V>(
         mut self,
-        headers: Vec<(HeaderName, String)>,
-    ) -> Self {
-        self.state.headers.extend(headers);
+        headers: impl IntoIterator<Item = (K, V)>,
+    ) -> Self
+    where
+        HeaderName: TryFrom<K>,
+        <HeaderName as TryFrom<K>>::Error: Into<HTTPError>,
+        HeaderValue: TryFrom<V>,
+        <HeaderValue as TryFrom<V>>::Error: Into<HTTPError>,
+    {
+        for (key, value) in headers {
+            self = self.header(key, value);
+        }
+
         self
     }
 
@@ -159,7 +188,7 @@ where
     ///
     /// async fn route() -> Response {
     ///     CreateResponse::success()
-    ///         .body("active".to_string())
+    ///         .body("active")
     /// }
     /// ```
     pub fn body(
@@ -172,8 +201,10 @@ where
             .status(self.state.status)
             .version(self.state.version);
 
-        for (header, value) in self.state.headers {
-            builder = builder.header(header, value);
+        for (header, value) in self.state.header_map {
+            if let Some(header) = header {
+                builder = builder.header(header, value);
+            }
         }
 
         builder.body(Body::from(self.state.body)).unwrap()
@@ -192,9 +223,10 @@ where
 ///
 /// async fn route() -> Response {
 ///     CreateResponse::success()
-///         .body("active".to_string())
+///         .body("active")
 /// }
 /// ```
+#[derive(Debug, Clone, Copy)]
 pub struct CreateResponse;
 
 impl CreateResponse {
@@ -204,7 +236,7 @@ impl CreateResponse {
             state: ResponseState {
                 status: StatusCode::OK,
                 version: Version::HTTP_11,
-                headers: vec![],
+                header_map: HeaderMap::new(),
                 body: B::default(),
             },
         }
@@ -216,7 +248,7 @@ impl CreateResponse {
             state: ResponseState {
                 status: StatusCode::BAD_REQUEST,
                 version: Version::HTTP_11,
-                headers: vec![],
+                header_map: HeaderMap::new(),
                 body: B::default(),
             },
         }

@@ -1,74 +1,127 @@
+pub mod error;
 pub mod failure;
 pub mod success;
 
 use axum::{
     body::Body,
-    http::{header, response::Builder, HeaderName, StatusCode, Version},
+    http::{
+        header, response::Builder, HeaderMap, HeaderValue, StatusCode, Version,
+    },
     response::Response,
 };
 use serde::{Deserialize, Serialize};
 
-use crate::utils::response::{
-    error::SERVER_ERROR_RESPONSE,
-    json::{
-        failure::JsonFailureResponseFunctions,
-        success::JsonSuccessResponseFunctions,
-    },
+use crate::utils::response::json::{
+    error::{JsonResponseErrorCode, FAILURE_RESPONSE_DEFAULT},
+    failure::JsonFailureResponseFunctions,
+    success::JsonSuccessResponseFunctions,
 };
 
-/// JSON response error type.
-#[derive(Serialize, Deserialize)]
+/// JSON response error.
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonResponseError {
+    /// Error code.
     pub code: String,
+    /// Field of the error.
     pub field: Option<String>,
+    /// Message of the error.
     pub message: Option<String>,
 }
 
-/// JSON response type.
-#[derive(Serialize, Deserialize)]
+/// JSON response.
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct JsonResponse<D = ()> {
+    /// Whether the response is successful.
     pub success: bool,
+    /// Data for the response when `success` is `true`.
     pub data: Option<D>,
+    /// Error for the response when `success` is `false`.
     pub error: Option<JsonResponseError>,
 }
 
-pub struct JsonResponseState<D> {
+/// Internal state.
+#[derive(Debug, Clone)]
+pub(crate) struct JsonResponseState<D> {
     status: StatusCode,
     version: Version,
-    headers: Vec<(HeaderName, String)>,
+    header_map: HeaderMap,
+    is_header_map_failed: bool,
     success: bool,
     data: Option<D>,
     error: Option<JsonResponseError>,
 }
 
-pub fn create_json_response_send<D: Serialize>(
-    mut state: JsonResponseState<D>
+pub(crate) fn create_json_response_send<D: Serialize>(
+    state: JsonResponseState<D>
 ) -> Response {
-    state.headers.push((header::CONTENT_TYPE, "application/json".to_string()));
+    let server_error: Response = Response::builder()
+        .status(StatusCode::INTERNAL_SERVER_ERROR)
+        .header(header::CONTENT_TYPE, "application/json")
+        .body(Body::from(FAILURE_RESPONSE_DEFAULT.to_string()))
+        .unwrap();
 
+    // header map error
+    if state.is_header_map_failed {
+        // create error
+        let res_error: JsonResponseError = JsonResponseError {
+            code: JsonResponseErrorCode::Parse.to_string(),
+            field: Some("header_map".to_string()),
+            message: Some("Failed to create header map.".to_string()),
+        };
+
+        let res: JsonResponse<D> =
+            JsonResponse { success: false, data: None, error: Some(res_error) };
+
+        // parse body
+        let body: String = match serde_json::to_string(&res) {
+            | Ok(body) => body,
+            | Err(_) => {
+                return server_error;
+            },
+        };
+
+        return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .header(header::CONTENT_TYPE, "application/json")
+            .body(Body::from(body))
+            .unwrap();
+    }
+
+    // create response builder
+    let mut builder: Builder =
+        Response::builder().status(state.status).version(state.version);
+
+    // set content type
+    let mut header_map: HeaderMap = state.header_map;
+
+    header_map.append(
+        header::CONTENT_TYPE,
+        HeaderValue::from_str("application/json").unwrap(),
+    );
+
+    // push headers
+    for (header, value) in header_map {
+        if let Some(header) = header {
+            builder = builder.header(header, value);
+        }
+    }
+
+    // create response
     let res: JsonResponse<D> = JsonResponse {
         success: state.success,
         data: state.data,
         error: state.error,
     };
 
-    let mut builder: Builder =
-        Response::builder().status(state.status).version(state.version);
-
-    for (header, value) in state.headers {
-        builder = builder.header(header, value);
-    }
-
+    // parse body
     let body: String = match serde_json::to_string(&res) {
         | Ok(body) => body,
         | Err(_) => {
-            return Response::builder()
-                .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .body(Body::from(SERVER_ERROR_RESPONSE.to_string()))
-                .unwrap();
+            return server_error;
         },
     };
 
+    // result
     builder.body(Body::from(body)).unwrap()
 }
 
@@ -81,7 +134,7 @@ pub fn create_json_response_send<D: Serialize>(
 /// ```no_run
 /// use jder_axum::response::{
 ///     Response,
-///     CreateJsonResponse,
+///     json::CreateJsonResponse,
 /// };
 ///
 /// async fn route() -> Response {
@@ -94,7 +147,7 @@ pub fn create_json_response_send<D: Serialize>(
 /// ```no_run
 /// use jder_axum::response::{
 ///     Response,
-///     CreateJsonResponse,
+///     json::CreateJsonResponse,
 /// };
 /// use serde::Serialize;
 ///
@@ -109,16 +162,44 @@ pub fn create_json_response_send<D: Serialize>(
 ///         .send()
 /// }
 /// ```
+///
+/// A failure JSON response:
+///
+/// ```no_run
+/// use jder_axum::response::{
+///     Response,
+///     json::CreateJsonResponse,
+/// };
+///
+/// async fn route() -> Response {
+///     CreateJsonResponse::failure().send()
+/// }
+/// ```
+#[derive(Debug, Clone, Copy)]
 pub struct CreateJsonResponse;
 
 impl CreateJsonResponse {
     /// Create a success JSON response without data.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// use jder_axum::response::{
+    ///     Response,
+    ///     json::CreateJsonResponse,
+    /// };
+    ///
+    /// async fn route() -> Response {
+    ///     CreateJsonResponse::dataless().send()
+    /// }
+    /// ```
     pub fn dataless() -> JsonSuccessResponseFunctions<()> {
         JsonSuccessResponseFunctions {
             state: JsonResponseState {
                 status: StatusCode::OK,
                 version: Version::HTTP_11,
-                headers: vec![],
+                header_map: HeaderMap::new(),
+                is_header_map_failed: false,
                 success: true,
                 data: None,
                 error: None,
@@ -127,12 +208,34 @@ impl CreateJsonResponse {
     }
 
     /// Create a success JSON response.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// use jder_axum::response::{
+    ///     Response,
+    ///     json::CreateJsonResponse,
+    /// };
+    /// use serde::Serialize;
+    ///
+    /// #[derive(Default, Serialize)]
+    /// struct ResponseData {
+    ///    name: String,
+    /// }
+    ///
+    /// async fn route() -> Response {
+    ///     CreateJsonResponse::success::<ResponseData>()
+    ///         .data(ResponseData { name: "Name".to_string() })
+    ///         .send()
+    /// }
+    /// ```
     pub fn success<D>() -> JsonSuccessResponseFunctions<D> {
         JsonSuccessResponseFunctions {
             state: JsonResponseState {
                 status: StatusCode::OK,
                 version: Version::HTTP_11,
-                headers: vec![],
+                header_map: HeaderMap::new(),
+                is_header_map_failed: false,
                 success: true,
                 data: None,
                 error: None,
@@ -141,12 +244,26 @@ impl CreateJsonResponse {
     }
 
     /// Create a failure JSON response.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// use jder_axum::response::{
+    ///     Response,
+    ///     json::CreateJsonResponse,
+    /// };
+    ///
+    /// async fn route() -> Response {
+    ///     CreateJsonResponse::failure().send()
+    /// }
+    /// ```
     pub fn failure() -> JsonFailureResponseFunctions<()> {
         JsonFailureResponseFunctions {
             state: JsonResponseState {
                 status: StatusCode::BAD_REQUEST,
                 version: Version::HTTP_11,
-                headers: vec![],
+                header_map: HeaderMap::new(),
+                is_header_map_failed: false,
                 success: false,
                 data: None,
                 error: None,

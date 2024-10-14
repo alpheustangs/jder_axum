@@ -1,7 +1,7 @@
 use axum::http::Uri;
 use jder_axum::{
     extract::OriginalUri,
-    response::{CreateJsonResponse, Response},
+    response::{json::CreateJsonResponse, Response},
 };
 use serde::{Deserialize, Serialize};
 

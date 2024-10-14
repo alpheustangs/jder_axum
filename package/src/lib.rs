@@ -11,37 +11,37 @@
 //! ## Usage
 //!
 //! To create a JSON response, use
-//! [`CreateJsonResponse`](response::CreateJsonResponse):
+//! [`CreateJsonResponse`](response::json::CreateJsonResponse):
 //!
 //! ```no_run
 //! use jder_axum::response::{
 //!     Response,
-//!     CreateJsonResponse
+//!     json::CreateJsonResponse
 //! };
 //! use serde::Serialize;
 //!
-//! #[derive(Default, Serialize)]
+//! #[derive(Serialize)]
 //! struct RouteResponseData {
-//!    title: &'static str,
+//!    title: String,
 //! }
 //!
 //! async fn route() -> Response {
 //!     CreateJsonResponse::success::<RouteResponseData>()
 //!         .data(RouteResponseData {
-//!             title: "Title"
+//!             title: "Title".to_string(),
 //!         })
 //!         .send()
 //! }
 //! ```
 //!
 //! If no data is needed, use
-//! [`dataless`](response::CreateJsonResponse::dataless)
+//! [`dataless`](response::json::CreateJsonResponse::dataless)
 //! function instead:
 //!
 //! ```no_run
 //! use jder_axum::response::{
 //!     Response,
-//!     CreateJsonResponse
+//!     json::CreateJsonResponse
 //! };
 //!
 //! async fn route() -> Response {
@@ -62,7 +62,7 @@
 //!
 //! async fn route() -> Response {
 //!     CreateResponse::success()
-//!         .header(header::CONTENT_TYPE, "text/plain".to_string())
+//!         .header(header::CONTENT_TYPE, "text/plain")
 //!         .body("hi")
 //! }
 //! ```
@@ -106,18 +106,33 @@ pub mod extract {
 
 /// Response module contains different response functions.
 pub mod response {
-    // Base
+    // base
     pub use crate::utils::response::{
         CreateResponse, Response, ResponseFunctions,
     };
 
-    // JSON
-    pub use crate::utils::response::json::failure::JsonFailureResponseFunctions;
-    pub use crate::utils::response::json::success::JsonSuccessResponseFunctions;
-    pub use crate::utils::response::json::{
-        CreateJsonResponse, JsonResponse, JsonResponseError,
-    };
+    /// JSON module.
+    pub mod json {
+        // base
+        pub use crate::utils::response::json::{
+            CreateJsonResponse, JsonResponse, JsonResponseError,
+        };
 
-    // Others
-    pub use crate::utils::response::error::ResponseErrorCode;
+        // success
+        pub use crate::utils::response::json::success::JsonSuccessResponseFunctions;
+
+        // failure
+        pub use crate::utils::response::json::failure::JsonFailureResponseFunctions;
+
+        // error
+        pub use crate::utils::response::json::error::JsonResponseErrorCode;
+    }
+
+    /// Header module.
+    pub mod header {
+        pub use crate::utils::response::header::{
+            get_header_from_key_value, get_header_name_from_key,
+            get_header_value_from_value,
+        };
+    }
 }

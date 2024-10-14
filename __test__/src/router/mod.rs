@@ -20,7 +20,7 @@ use axum::{
     Router,
 };
 use axum_test::TestServer;
-use jder_axum::response::{CreateJsonResponse, Response};
+use jder_axum::response::{json::CreateJsonResponse, Response};
 use json::route_json;
 use matched_path::route_matched_path;
 use nested_path::route_nested_path;

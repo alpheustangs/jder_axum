@@ -1,4 +1,5 @@
 pub mod connect_info;
+pub mod header;
 pub mod host;
 pub mod json;
 pub mod matched_path;
@@ -12,7 +13,7 @@ pub mod state;
 #[cfg(test)]
 mod test {
     use axum_test::TestServer;
-    use jder_axum::response::JsonResponse;
+    use jder_axum::response::json::JsonResponse;
 
     use crate::router::create_server;
 

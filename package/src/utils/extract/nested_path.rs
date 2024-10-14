@@ -7,7 +7,8 @@ use axum::{
 };
 
 use crate::utils::response::{
-    error::ResponseErrorCode, json::CreateJsonResponse, Response,
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
+    Response,
 };
 
 /// Access the path the matched the route is nested at.
@@ -59,8 +60,8 @@ where
             | Ok(value) => Ok(NestedPath(value.as_str().into())),
             | Err(rejection) => Err(CreateJsonResponse::failure()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .error_code(ResponseErrorCode::ServerError.to_string())
-                .error_message(rejection.to_string())
+                .error_code(JsonResponseErrorCode::Server.as_str())
+                .error_message(&rejection.body_text())
                 .send()),
         }
     }

@@ -1,4 +1,4 @@
-use axum::http::{HeaderName, StatusCode};
+use axum::http::{Error as HTTPError, HeaderName, HeaderValue, StatusCode};
 use serde::Serialize;
 
 use crate::utils::response::{
@@ -7,8 +7,10 @@ use crate::utils::response::{
 };
 
 /// Functions for creating a success response.
+#[derive(Debug, Clone)]
 pub struct JsonSuccessResponseFunctions<D> {
-    pub state: JsonResponseState<D>,
+    /// Internal state.
+    pub(crate) state: JsonResponseState<D>,
 }
 
 impl<D: Serialize> JsonSuccessResponseFunctions<D> {
@@ -20,7 +22,7 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     /// use axum::http::StatusCode;
     /// use jder_axum::response::{
     ///     Response,
-    ///     CreateJsonResponse,
+    ///     json::CreateJsonResponse,
     /// };
     ///
     /// async fn route() -> Response {
@@ -34,6 +36,7 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
         status: StatusCode,
     ) -> Self {
         self.state.status = status;
+
         self
     }
 
@@ -45,7 +48,7 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     /// use axum::http::Version;
     /// use jder_axum::response::{
     ///     Response,
-    ///     CreateJsonResponse,
+    ///     json::CreateJsonResponse,
     /// };
     ///
     /// async fn route() -> Response {
@@ -59,10 +62,14 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
         version: axum::http::Version,
     ) -> Self {
         self.state.version = version;
+
         self
     }
 
     /// Set a header for the response.
+    ///
+    /// For validation on key value, see
+    /// [`get_header_from_key_value`](crate::response::header::get_header_from_key_value).
     ///
     /// ## Example
     ///
@@ -73,28 +80,55 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     /// };
     /// use jder_axum::response::{
     ///     Response,
-    ///     CreateJsonResponse,
+    ///     json::CreateJsonResponse,
     /// };
     ///
     /// async fn route() -> Response {
     ///     CreateJsonResponse::dataless()
     ///         .header(
     ///             header::CONTENT_TYPE,
-    ///             "application/json".to_string()
+    ///             "application/json"
     ///         )
     ///         .send()
     /// }
     /// ```
-    pub fn header(
+    pub fn header<K, V>(
         mut self,
-        header: HeaderName,
-        value: String,
-    ) -> Self {
-        self.state.headers.push((header, value));
+        key: K,
+        value: V,
+    ) -> Self
+    where
+        HeaderName: TryFrom<K>,
+        <HeaderName as TryFrom<K>>::Error: Into<HTTPError>,
+        HeaderValue: TryFrom<V>,
+        <HeaderValue as TryFrom<V>>::Error: Into<HTTPError>,
+    {
+        let key: HeaderName = match <HeaderName as TryFrom<K>>::try_from(key) {
+            | Ok(k) => k,
+            | Err(_) => {
+                self.state.is_header_map_failed = true;
+                return self;
+            },
+        };
+
+        let value: HeaderValue =
+            match <HeaderValue as TryFrom<V>>::try_from(value) {
+                | Ok(v) => v,
+                | Err(_) => {
+                    self.state.is_header_map_failed = true;
+                    return self;
+                },
+            };
+
+        self.state.header_map.try_append(key, value).unwrap();
+
         self
     }
 
     /// Set multiple headers for the response.
+    ///
+    /// For validation on key value, see
+    /// [`get_header_from_key_value`](crate::response::header::get_header_from_key_value).
     ///
     /// ## Example
     ///
@@ -105,29 +139,40 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     /// };
     /// use jder_axum::response::{
     ///     Response,
-    ///     CreateJsonResponse,
+    ///     json::CreateJsonResponse,
     /// };
     ///
     /// async fn route() -> Response {
+    ///     let headers: Vec<(HeaderName, &str)> = vec![
+    ///         (
+    ///             header::CONTENT_TYPE,
+    ///             "application/json"
+    ///         ),
+    ///         (
+    ///             header::ACCESS_CONTROL_ALLOW_ORIGIN,
+    ///             "*"
+    ///         ),
+    ///     ];
+    ///
     ///     CreateJsonResponse::dataless()
-    ///         .headers(vec![
-    ///             (
-    ///                 header::CONTENT_TYPE,
-    ///                 "application/json".to_string()
-    ///             ),
-    ///             (
-    ///                 header::ACCESS_CONTROL_ALLOW_ORIGIN,
-    ///                 "*".to_string()
-    ///             ),
-    ///         ])
+    ///         .headers(headers)
     ///         .send()
     /// }
     /// ```
-    pub fn headers(
+    pub fn headers<K, V>(
         mut self,
-        headers: Vec<(HeaderName, String)>,
-    ) -> Self {
-        self.state.headers.extend(headers);
+        headers: impl IntoIterator<Item = (K, V)>,
+    ) -> Self
+    where
+        HeaderName: TryFrom<K>,
+        <HeaderName as TryFrom<K>>::Error: Into<HTTPError>,
+        HeaderValue: TryFrom<V>,
+        <HeaderValue as TryFrom<V>>::Error: Into<HTTPError>,
+    {
+        for (key, value) in headers {
+            self = self.header(key, value);
+        }
+
         self
     }
 
@@ -138,7 +183,7 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     /// ```no_run
     /// use jder_axum::response::{
     ///     Response,
-    ///     CreateJsonResponse,
+    ///     json::CreateJsonResponse,
     /// };
     ///
     /// async fn route() -> Response {
@@ -158,7 +203,7 @@ impl<D> JsonSuccessResponseFunctions<D> {
     /// ```no_run
     /// use jder_axum::response::{
     ///     Response,
-    ///     CreateJsonResponse
+    ///     json::CreateJsonResponse
     /// };
     /// use serde::Serialize;
     ///
@@ -178,6 +223,7 @@ impl<D> JsonSuccessResponseFunctions<D> {
         data: D,
     ) -> Self {
         self.state.data = Some(data);
+
         self
     }
 }

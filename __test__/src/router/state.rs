@@ -3,7 +3,7 @@ use std::sync::{Arc, Mutex, MutexGuard};
 use axum::http::StatusCode;
 use jder_axum::{
     extract::State,
-    response::{CreateJsonResponse, Response},
+    response::{json::CreateJsonResponse, Response},
 };
 use serde::{Deserialize, Serialize};
 

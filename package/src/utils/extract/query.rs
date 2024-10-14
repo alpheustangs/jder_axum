@@ -9,7 +9,8 @@ use serde::{
 };
 
 use crate::utils::response::{
-    error::ResponseErrorCode, json::CreateJsonResponse, Response,
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
+    Response,
 };
 
 /// Convert an empty string to None instead of returning an error.
@@ -100,14 +101,14 @@ where
                 | QueryRejection::FailedToDeserializeQueryString(inner) => {
                     CreateJsonResponse::failure()
                         .status(inner.status())
-                        .error_code(ResponseErrorCode::ParseError.to_string())
-                        .error_message(inner.to_string())
+                        .error_code(JsonResponseErrorCode::Parse.as_str())
+                        .error_message(&inner.body_text())
                         .send()
                 },
                 | _ => CreateJsonResponse::failure()
                     .status(StatusCode::INTERNAL_SERVER_ERROR)
-                    .error_code(ResponseErrorCode::ServerError.to_string())
-                    .error_message(rejection.to_string())
+                    .error_code(JsonResponseErrorCode::Server.as_str())
+                    .error_message(&rejection.body_text())
                     .send(),
             }),
         }

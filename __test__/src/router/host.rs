@@ -1,6 +1,6 @@
 use jder_axum::{
     extract::Host,
-    response::{CreateJsonResponse, Response},
+    response::{json::CreateJsonResponse, Response},
 };
 use serde::{Deserialize, Serialize};
 

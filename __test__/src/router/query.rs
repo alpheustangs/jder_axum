@@ -1,6 +1,6 @@
 use jder_axum::{
     extract::query::{empty_to_none, Query},
-    response::{CreateJsonResponse, Response},
+    response::{json::CreateJsonResponse, Response},
 };
 use serde::{Deserialize, Serialize};
 

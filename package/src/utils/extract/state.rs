@@ -7,7 +7,8 @@ use axum::{
 };
 
 use crate::utils::response::{
-    error::ResponseErrorCode, json::CreateJsonResponse, Response,
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
+    Response,
 };
 
 /// Extractor for state.
@@ -74,7 +75,7 @@ use crate::utils::response::{
 ///     .route("/", get(route))
 ///     .with_state(app_state);
 /// ```
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct State<S>(pub S);
 
 #[async_trait]
@@ -93,7 +94,7 @@ where
             | Ok(value) => Ok(Self(value.0)),
             | Err(_) => Err(CreateJsonResponse::failure()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .error_code(ResponseErrorCode::ServerError.to_string())
+                .error_code(JsonResponseErrorCode::Server.as_str())
                 .send()),
         }
     }

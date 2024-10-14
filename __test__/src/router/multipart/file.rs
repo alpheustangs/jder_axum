@@ -5,7 +5,7 @@ use axum::{
 use axum_typed_multipart::{FieldData, TryFromMultipart};
 use jder_axum::{
     extract::multipart::Multipart,
-    response::{CreateJsonResponse, CreateResponse, Response},
+    response::{json::CreateJsonResponse, CreateResponse, Response},
 };
 
 #[derive(TryFromMultipart)]
@@ -24,8 +24,8 @@ pub async fn route_multipart_file(
                     .header(
                         header::CONTENT_TYPE,
                         match &image.metadata.content_type {
-                            | Some(content_type) => content_type.to_string(),
-                            | None => "text/plain".to_string(),
+                            | Some(content_type) => content_type,
+                            | None => "text/plain",
                         },
                     )
                     .body(image.contents.clone());

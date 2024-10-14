@@ -3,7 +3,7 @@ pub mod file;
 use axum_typed_multipart::TryFromMultipart;
 use jder_axum::{
     extract::multipart::Multipart,
-    response::{CreateJsonResponse, Response},
+    response::{json::CreateJsonResponse, Response},
 };
 use serde::{Deserialize, Serialize};
 

@@ -5,7 +5,7 @@ mod test {
     use axum_test::{multipart::MultipartForm, TestServer};
     use jder_axum::{
         extract::multipart::MultipartFailureResponse,
-        response::{JsonResponse, ResponseErrorCode},
+        response::json::{JsonResponse, JsonResponseErrorCode},
     };
 
     use crate::router::create_server;
@@ -45,7 +45,7 @@ mod test {
         assert_eq!(res.success, false);
         assert_eq!(
             res.error.unwrap().code,
-            ResponseErrorCode::ParseError.to_string()
+            JsonResponseErrorCode::Parse.to_string()
         );
     }
 
@@ -62,7 +62,7 @@ mod test {
         assert_eq!(res.success, false);
         assert_eq!(
             res.error.unwrap().code,
-            ResponseErrorCode::ParseError.to_string()
+            JsonResponseErrorCode::Parse.to_string()
         );
     }
 
@@ -83,7 +83,7 @@ mod test {
         assert_eq!(res.success, false);
         assert_eq!(
             res.error.unwrap().code,
-            ResponseErrorCode::ParseError.to_string()
+            JsonResponseErrorCode::Parse.to_string()
         );
     }
 }

@@ -9,8 +9,7 @@ use bytes::{buf::Writer, BufMut, BytesMut};
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::utils::response::{
-    error::{ResponseErrorCode, SERVER_ERROR_RESPONSE},
-    json::{CreateJsonResponse, JsonResponse, JsonResponseError},
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
 };
 
@@ -65,32 +64,32 @@ fn match_rejection(rejection: JsonRejection) -> Response {
     match rejection {
         | JsonRejection::JsonDataError(inner) => CreateJsonResponse::failure()
             .status(inner.status())
-            .error_code(ResponseErrorCode::ParseError.to_string())
-            .error_message(inner.to_string())
+            .error_code(JsonResponseErrorCode::Parse.as_str())
+            .error_message(&inner.to_string())
             .send(),
         | JsonRejection::JsonSyntaxError(inner) => {
             CreateJsonResponse::failure()
                 .status(inner.status())
-                .error_code(ResponseErrorCode::ParseError.to_string())
-                .error_message(inner.to_string())
+                .error_code(JsonResponseErrorCode::Parse.as_str())
+                .error_message(&inner.body_text())
                 .send()
         },
         | JsonRejection::MissingJsonContentType(inner) => {
             CreateJsonResponse::failure()
                 .status(inner.status())
-                .error_code(ResponseErrorCode::ParseError.to_string())
-                .error_message(inner.to_string())
+                .error_code(JsonResponseErrorCode::Parse.as_str())
+                .error_message(&inner.body_text())
                 .send()
         },
         | JsonRejection::BytesRejection(inner) => CreateJsonResponse::failure()
             .status(inner.status())
-            .error_code(ResponseErrorCode::ParseError.to_string())
-            .error_message(inner.to_string())
+            .error_code(JsonResponseErrorCode::Parse.as_str())
+            .error_message(&inner.body_text())
             .send(),
         | _ => CreateJsonResponse::failure()
             .status(StatusCode::INTERNAL_SERVER_ERROR)
-            .error_code(ResponseErrorCode::ServerError.to_string())
-            .error_message(rejection.to_string())
+            .error_code(JsonResponseErrorCode::Server.as_str())
+            .error_message(&rejection.body_text())
             .send(),
     }
 }
@@ -148,31 +147,15 @@ where
 
         match serde_json::to_writer(&mut buf, &self.0) {
             | Ok(()) => (
-                [(header::CONTENT_TYPE, "application/json".to_string())],
+                [(header::CONTENT_TYPE, "application/json")],
                 buf.into_inner().freeze(),
             )
                 .into_response(),
-            | Err(err) => {
-                let res: JsonResponse = JsonResponse {
-                    success: false,
-                    data: None,
-                    error: Some(JsonResponseError {
-                        code: ResponseErrorCode::ServerError.to_string(),
-                        field: None,
-                        message: Some(err.to_string()),
-                    }),
-                };
-
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    [(header::CONTENT_TYPE, "application/json".to_string())],
-                    match serde_json::to_string(&res) {
-                        | Ok(value) => value,
-                        | Err(_) => SERVER_ERROR_RESPONSE.to_string(),
-                    },
-                )
-            }
-            .into_response(),
+            | Err(err) => CreateJsonResponse::failure()
+                .status(StatusCode::INTERNAL_SERVER_ERROR)
+                .error_code(JsonResponseErrorCode::Server.as_str())
+                .error_message(&err.to_string())
+                .send(),
         }
     }
 }

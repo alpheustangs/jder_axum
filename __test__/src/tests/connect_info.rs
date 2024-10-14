@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod test {
     use axum_test::TestServer;
-    use jder_axum::response::JsonResponse;
+    use jder_axum::response::json::JsonResponse;
 
     use crate::router::connect_info::RouteConnectInfoResponseData;
     use crate::router::create_server;
