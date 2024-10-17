@@ -13,9 +13,9 @@ impl JsonResponseErrorCode {
     /// Get the error code as `&str`.
     pub fn as_str(&self) -> &str {
         match self {
-            | Self::Parse => "parse_error",
-            | Self::Server => "server_error",
-            | Self::Unknown => "unknown_error",
+            | Self::Parse => "parse",
+            | Self::Server => "server",
+            | Self::Unknown => "unknown",
         }
     }
 }
@@ -29,4 +29,4 @@ impl std::fmt::Display for JsonResponseErrorCode {
     }
 }
 
-pub(crate) const FAILURE_RESPONSE_DEFAULT: &str = "{\"success\":false,\"data\":null,\"error\":{\"code\":\"server_error\",\"field\":null,\"message\":\"Internal server error.\"}}";
+pub(crate) const FAILURE_RESPONSE_DEFAULT: &str = "{\"success\":false,\"data\":null,\"error\":{\"code\":\"server\",\"field\":null,\"message\":\"Internal server error.\"}}";
