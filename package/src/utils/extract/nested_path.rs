@@ -61,7 +61,7 @@ where
             | Err(rejection) => Err(CreateJsonResponse::failure()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
                 .error_code(JsonResponseErrorCode::Server.as_str())
-                .error_message(&rejection.body_text())
+                .error_message(rejection.body_text())
                 .send()),
         }
     }

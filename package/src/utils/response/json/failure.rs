@@ -1,4 +1,6 @@
-use axum::http::{Error as HTTPError, HeaderName, HeaderValue, StatusCode};
+use axum::http::{
+    Error as HTTPError, HeaderName, HeaderValue, StatusCode, Version,
+};
 use serde::Serialize;
 
 use crate::utils::response::{
@@ -33,11 +35,11 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     ///         .send()
     /// }
     /// ```
-    pub fn status(
+    pub fn status<S: Into<StatusCode>>(
         mut self,
-        status: StatusCode,
+        status: S,
     ) -> Self {
-        self.state.status = status;
+        self.state.status = status.into();
 
         self
     }
@@ -59,11 +61,11 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     ///         .send()
     /// }
     /// ```
-    pub fn version(
+    pub fn version<V: Into<Version>>(
         mut self,
-        version: axum::http::Version,
+        version: V,
     ) -> Self {
-        self.state.version = version;
+        self.state.version = version.into();
 
         self
     }
@@ -248,12 +250,12 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     ///         .send()
     /// }
     /// ```
-    pub fn error_code(
+    pub fn error_code<S: Into<String>>(
         mut self,
-        code: &str,
+        code: S,
     ) -> Self {
         self.state.error = Some(JsonResponseError {
-            code: code.to_string(),
+            code: code.into(),
             field: match &self.state.error {
                 | Some(error) => error.field.clone(),
                 | None => None,
@@ -283,9 +285,9 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     ///         .send()
     /// }
     /// ```
-    pub fn error_field(
+    pub fn error_field<S: Into<String>>(
         mut self,
-        field: &str,
+        field: S,
     ) -> Self {
         self.state.error = Some(JsonResponseError {
             code: match &self.state.error {
@@ -293,7 +295,7 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
                 | None => JsonResponseErrorCode::Unknown.as_str(),
             }
             .to_string(),
-            field: Some(field.to_string()),
+            field: Some(field.into()),
             message: match self.state.error {
                 | Some(error) => error.message.clone(),
                 | None => None,
@@ -319,9 +321,9 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     ///         .send()
     /// }
     /// ```
-    pub fn error_message(
+    pub fn error_message<S: Into<String>>(
         mut self,
-        message: &str,
+        message: S,
     ) -> Self {
         self.state.error = Some(JsonResponseError {
             code: match &self.state.error {
@@ -333,7 +335,7 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
                 | Some(error) => error.field,
                 | None => None,
             },
-            message: Some(message.to_string()),
+            message: Some(message.into()),
         });
 
         self

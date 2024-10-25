@@ -102,13 +102,13 @@ where
                     CreateJsonResponse::failure()
                         .status(inner.status())
                         .error_code(JsonResponseErrorCode::Parse.as_str())
-                        .error_message(&inner.body_text())
+                        .error_message(inner.body_text())
                         .send()
                 },
                 | _ => CreateJsonResponse::failure()
                     .status(StatusCode::INTERNAL_SERVER_ERROR)
                     .error_code(JsonResponseErrorCode::Server.as_str())
-                    .error_message(&rejection.body_text())
+                    .error_message(rejection.body_text())
                     .send(),
             }),
         }

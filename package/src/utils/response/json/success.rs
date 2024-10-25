@@ -1,4 +1,6 @@
-use axum::http::{Error as HTTPError, HeaderName, HeaderValue, StatusCode};
+use axum::http::{
+    Error as HTTPError, HeaderName, HeaderValue, StatusCode, Version,
+};
 use serde::Serialize;
 
 use crate::utils::response::{
@@ -31,11 +33,11 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     ///         .send()
     /// }
     /// ```
-    pub fn status(
+    pub fn status<S: Into<StatusCode>>(
         mut self,
-        status: StatusCode,
+        status: S,
     ) -> Self {
-        self.state.status = status;
+        self.state.status = status.into();
 
         self
     }
@@ -57,11 +59,11 @@ impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     ///         .send()
     /// }
     /// ```
-    pub fn version(
+    pub fn version<V: Into<Version>>(
         mut self,
-        version: axum::http::Version,
+        version: V,
     ) -> Self {
-        self.state.version = version;
+        self.state.version = version.into();
 
         self
     }

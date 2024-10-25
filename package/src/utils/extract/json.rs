@@ -65,31 +65,31 @@ fn match_rejection(rejection: JsonRejection) -> Response {
         | JsonRejection::JsonDataError(inner) => CreateJsonResponse::failure()
             .status(inner.status())
             .error_code(JsonResponseErrorCode::Parse.as_str())
-            .error_message(&inner.to_string())
+            .error_message(inner.to_string())
             .send(),
         | JsonRejection::JsonSyntaxError(inner) => {
             CreateJsonResponse::failure()
                 .status(inner.status())
                 .error_code(JsonResponseErrorCode::Parse.as_str())
-                .error_message(&inner.body_text())
+                .error_message(inner.body_text())
                 .send()
         },
         | JsonRejection::MissingJsonContentType(inner) => {
             CreateJsonResponse::failure()
                 .status(inner.status())
                 .error_code(JsonResponseErrorCode::Parse.as_str())
-                .error_message(&inner.body_text())
+                .error_message(inner.body_text())
                 .send()
         },
         | JsonRejection::BytesRejection(inner) => CreateJsonResponse::failure()
             .status(inner.status())
             .error_code(JsonResponseErrorCode::Parse.as_str())
-            .error_message(&inner.body_text())
+            .error_message(inner.body_text())
             .send(),
         | _ => CreateJsonResponse::failure()
             .status(StatusCode::INTERNAL_SERVER_ERROR)
             .error_code(JsonResponseErrorCode::Server.as_str())
-            .error_message(&rejection.body_text())
+            .error_message(rejection.body_text())
             .send(),
     }
 }
@@ -154,7 +154,7 @@ where
             | Err(err) => CreateJsonResponse::failure()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
                 .error_code(JsonResponseErrorCode::Server.as_str())
-                .error_message(&err.to_string())
+                .error_message(err.to_string())
                 .send(),
         }
     }

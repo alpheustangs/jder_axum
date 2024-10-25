@@ -48,11 +48,11 @@ where
     ///         .body("created")
     /// }
     /// ```
-    pub fn status(
+    pub fn status<S: Into<StatusCode>>(
         mut self,
-        status: StatusCode,
+        status: S,
     ) -> Self {
-        self.state.status = status;
+        self.state.status = status.into();
 
         self
     }
@@ -74,11 +74,11 @@ where
     ///         .body("active")
     /// }
     /// ```
-    pub fn version(
+    pub fn version<V: Into<Version>>(
         mut self,
-        version: Version,
+        version: V,
     ) -> Self {
-        self.state.version = version;
+        self.state.version = version.into();
 
         self
     }
