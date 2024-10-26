@@ -1,3 +1,17 @@
+## 0.3.0 (2024-10-26)
+
+### Breaking Changes
+
+- Values renamed in `JsonResponseErrorCode`
+
+### What's Changed
+
+- `status` in `CreateJsonResponse` accept more types of input now
+- `version` in `CreateJsonResponse` accept more types of input now
+- `error_code` in `CreateJsonResponse` accept more types of input now
+- `error_field` in `CreateJsonResponse` accept more types of input now
+- `error_message` in `CreateJsonResponse` accept more types of input now
+
 ## 0.2.0 (2024-10-14)
 
 ### Breaking Changes

@@ -1,6 +1,6 @@
 //! # JDER Axum
 //!
-//! A JDER builder for Axum.
+//! A response builder for Axum.
 //!
 //! This package includes several Axum response builders and different
 //! extractors based on the JSON response structure specified in

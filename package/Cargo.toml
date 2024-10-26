@@ -1,10 +1,10 @@
 [package]
 name = "jder_axum"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Alpheus Tang"]
 edition = "2021"
 description = """
-A JDER builder for Axum
+A response builder for Axum
 """
 readme = "README.md"
 homepage = "https://github.com/alpheustangs/jder_axum"
