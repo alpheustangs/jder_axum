@@ -8,7 +8,7 @@ use axum::{
 use bytes::{buf::Writer, BufMut, BytesMut};
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::utils::response::{
+use crate::internal::response::{
     json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
 };

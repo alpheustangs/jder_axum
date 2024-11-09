@@ -11,7 +11,7 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::utils::response::json::{
+use crate::internal::response::json::{
     error::{JsonResponseErrorCode, FAILURE_RESPONSE_DEFAULT},
     failure::JsonFailureResponseFunctions,
     success::JsonSuccessResponseFunctions,

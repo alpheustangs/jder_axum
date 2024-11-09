@@ -3,21 +3,19 @@ use axum::http::{
 };
 use serde::Serialize;
 
-use crate::utils::response::{
-    json::{
-        create_json_response_send, error::JsonResponseErrorCode,
-        JsonResponseError, JsonResponseState,
-    },
+use crate::internal::response::{
+    json::{create_json_response_send, JsonResponseState},
     Response,
 };
 
-/// Functions for creating an failure response.
+/// Functions for creating a success response.
 #[derive(Debug, Clone)]
-pub struct JsonFailureResponseFunctions<D> {
+pub struct JsonSuccessResponseFunctions<D> {
+    /// Internal state.
     pub(crate) state: JsonResponseState<D>,
 }
 
-impl<D: Serialize> JsonFailureResponseFunctions<D> {
+impl<D: Serialize> JsonSuccessResponseFunctions<D> {
     /// Set the status code for the response.
     ///
     /// ## Example
@@ -26,12 +24,12 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     /// use axum::http::StatusCode;
     /// use jder_axum::response::{
     ///     Response,
-    ///     json::CreateJsonResponse
+    ///     json::CreateJsonResponse,
     /// };
     ///
     /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure()
-    ///         .status(StatusCode::NOT_FOUND)
+    ///     CreateJsonResponse::dataless()
+    ///         .status(StatusCode::CREATED)
     ///         .send()
     /// }
     /// ```
@@ -52,11 +50,11 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     /// use axum::http::Version;
     /// use jder_axum::response::{
     ///     Response,
-    ///     json::CreateJsonResponse
+    ///     json::CreateJsonResponse,
     /// };
     ///
     /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure()
+    ///     CreateJsonResponse::dataless()
     ///         .version(Version::HTTP_3)
     ///         .send()
     /// }
@@ -88,7 +86,7 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     /// };
     ///
     /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure()
+    ///     CreateJsonResponse::dataless()
     ///         .header(
     ///             header::CONTENT_TYPE,
     ///             "application/json"
@@ -191,7 +189,7 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     /// };
     ///
     /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure().send()
+    ///     CreateJsonResponse::dataless().send()
     /// }
     /// ```
     pub fn send(self) -> Response {
@@ -199,144 +197,34 @@ impl<D: Serialize> JsonFailureResponseFunctions<D> {
     }
 }
 
-impl<D: Serialize> JsonFailureResponseFunctions<D> {
-    /// Set an error for the response.
-    /// This action will overwrite `error_code`,
-    /// `error_field`, and `error_message` if they are set.
+impl<D> JsonSuccessResponseFunctions<D> {
+    /// Set the data for the response.
     ///
     /// ## Example
     ///
     /// ```no_run
     /// use jder_axum::response::{
     ///     Response,
-    ///     json::{
-    ///         CreateJsonResponse,
-    ///         JsonResponseError,
-    ///     },
+    ///     json::CreateJsonResponse
     /// };
+    /// use serde::Serialize;
+    ///
+    /// #[derive(Default, Serialize)]
+    /// struct ResponseData {
+    ///    name: String,
+    /// }
     ///
     /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure()
-    ///         .error(JsonResponseError {
-    ///             code: "parse_error".to_string(),
-    ///             field: Some("title".to_string()),
-    ///             message: Some("Invalid title".to_string()),
-    ///         })
+    ///     CreateJsonResponse::success::<ResponseData>()
+    ///         .data(ResponseData { name: "Name".to_string() })
     ///         .send()
     /// }
     /// ```
-    pub fn error(
+    pub fn data(
         mut self,
-        error: JsonResponseError,
+        data: D,
     ) -> Self {
-        self.state.error = Some(error);
-
-        self
-    }
-
-    /// Set an error code for the response.
-    ///
-    /// ## Example
-    ///
-    /// ```no_run
-    /// use jder_axum::response::{
-    ///     Response,
-    ///     json::CreateJsonResponse,
-    /// };
-    ///
-    /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure()
-    ///         .error_code("parse_error")
-    ///         .send()
-    /// }
-    /// ```
-    pub fn error_code<S: Into<String>>(
-        mut self,
-        code: S,
-    ) -> Self {
-        self.state.error = Some(JsonResponseError {
-            code: code.into(),
-            field: match &self.state.error {
-                | Some(error) => error.field.clone(),
-                | None => None,
-            },
-            message: match self.state.error {
-                | Some(error) => error.message.clone(),
-                | None => None,
-            },
-        });
-
-        self
-    }
-
-    /// Set an error field for the response.
-    ///
-    /// ## Example
-    ///
-    /// ```no_run
-    /// use jder_axum::response::{
-    ///     Response,
-    ///     json::CreateJsonResponse,
-    /// };
-    ///
-    /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure()
-    ///         .error_field("title")
-    ///         .send()
-    /// }
-    /// ```
-    pub fn error_field<S: Into<String>>(
-        mut self,
-        field: S,
-    ) -> Self {
-        self.state.error = Some(JsonResponseError {
-            code: match &self.state.error {
-                | Some(error) => &error.code,
-                | None => JsonResponseErrorCode::Unknown.as_str(),
-            }
-            .to_string(),
-            field: Some(field.into()),
-            message: match self.state.error {
-                | Some(error) => error.message.clone(),
-                | None => None,
-            },
-        });
-
-        self
-    }
-
-    /// Set an error message for the response.
-    ///
-    /// ## Example
-    ///
-    /// ```no_run
-    /// use jder_axum::response::{
-    ///     Response,
-    ///     json::CreateJsonResponse,
-    /// };
-    ///
-    /// async fn route() -> Response {
-    ///     CreateJsonResponse::failure()
-    ///         .error_message("Invalid title")
-    ///         .send()
-    /// }
-    /// ```
-    pub fn error_message<S: Into<String>>(
-        mut self,
-        message: S,
-    ) -> Self {
-        self.state.error = Some(JsonResponseError {
-            code: match &self.state.error {
-                | Some(error) => &error.code,
-                | None => JsonResponseErrorCode::Unknown.as_str(),
-            }
-            .to_string(),
-            field: match self.state.error {
-                | Some(error) => error.field,
-                | None => None,
-            },
-            message: Some(message.into()),
-        });
+        self.state.data = Some(data);
 
         self
     }

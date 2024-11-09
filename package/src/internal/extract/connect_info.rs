@@ -7,7 +7,7 @@ use axum::{
     http::{request::Parts, StatusCode},
 };
 
-use crate::utils::response::{
+use crate::internal::response::{
     json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
 };

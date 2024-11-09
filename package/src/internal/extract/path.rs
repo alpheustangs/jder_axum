@@ -8,7 +8,7 @@ use axum::{
 };
 use serde::de::DeserializeOwned;
 
-use crate::utils::response::{
+use crate::internal::response::{
     json::{
         error::JsonResponseErrorCode, failure::JsonFailureResponseFunctions,
         CreateJsonResponse,

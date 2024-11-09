@@ -1,32 +1,52 @@
+use std::sync::Arc;
+
 use axum::{
     async_trait,
-    extract::{rejection::HostRejection, FromRequestParts, Host as _Host},
+    extract::{
+        rejection::MatchedPathRejection, FromRequestParts,
+        MatchedPath as _MatchedPath,
+    },
     http::{request::Parts, StatusCode},
 };
 
-use crate::utils::response::{
+use crate::internal::response::{
     json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
 };
 
-/// Extractor that resolves the hostname of the request.
+/// Access the path in the router that matches the request.
 ///
-/// Check [`Host`](axum::extract::Host) for more information.
+/// Check [`MatchedPath`](axum::extract::MatchedPath) for more information.
 ///
 /// ## Example
 ///
 /// ```no_run
-/// use jder_axum::extract::Host;
+/// use axum::{
+///     Router,
+///     routing::get,
+/// };
+/// use jder_axum::extract::MatchedPath;
 ///
-/// async fn route(host: Host) {
-///     let host: String = host.0;
+/// async fn route(path: MatchedPath) {
+///     let path: &str = path.as_str();
+///     // "/users/:id"
 /// }
+///
+/// let router: Router = Router::new()
+///     .route("/users/:id", get(route));
 /// ```
 #[derive(Debug, Clone)]
-pub struct Host(pub String);
+pub struct MatchedPath(pub(crate) Arc<str>);
+
+impl MatchedPath {
+    /// Returns a `str` representation of the path.
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
 
 #[async_trait]
-impl<S> FromRequestParts<S> for Host
+impl<S> FromRequestParts<S> for MatchedPath
 where
     S: Send + Sync,
 {
@@ -36,10 +56,10 @@ where
         parts: &mut Parts,
         state: &S,
     ) -> Result<Self, Self::Rejection> {
-        match _Host::from_request_parts(parts, state).await {
-            | Ok(value) => Ok(Self(value.0)),
+        match _MatchedPath::from_request_parts(parts, state).await {
+            | Ok(value) => Ok(MatchedPath(value.as_str().into())),
             | Err(rejection) => Err(match rejection {
-                | HostRejection::FailedToResolveHost(inner) => {
+                | MatchedPathRejection::MatchedPathMissing(inner) => {
                     CreateJsonResponse::failure()
                         .status(inner.status())
                         .error_code(JsonResponseErrorCode::Parse.as_str())

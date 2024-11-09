@@ -67,70 +67,70 @@
 //! }
 //! ```
 
-mod utils;
+mod internal;
 
 /// Extract module contains different extractors.
 pub mod extract {
-    pub use crate::utils::extract::connect_info::ConnectInfo;
+    pub use crate::internal::extract::connect_info::ConnectInfo;
 
-    pub use crate::utils::extract::host::Host;
+    pub use crate::internal::extract::host::Host;
 
-    pub use crate::utils::extract::json::Json;
+    pub use crate::internal::extract::json::Json;
 
-    pub use crate::utils::extract::matched_path::MatchedPath;
+    pub use crate::internal::extract::matched_path::MatchedPath;
 
-    pub use crate::utils::extract::multipart::Multipart;
+    pub use crate::internal::extract::multipart::Multipart;
 
     /// Multipart extractor module.
     pub mod multipart {
-        pub use crate::utils::extract::multipart::{
+        pub use crate::internal::extract::multipart::{
             Multipart, MultipartFailureResponse,
         };
     }
 
-    pub use crate::utils::extract::nested_path::NestedPath;
+    pub use crate::internal::extract::nested_path::NestedPath;
 
-    pub use crate::utils::extract::original_uri::OriginalUri;
+    pub use crate::internal::extract::original_uri::OriginalUri;
 
-    pub use crate::utils::extract::path::Path;
+    pub use crate::internal::extract::path::Path;
 
-    pub use crate::utils::extract::query::Query;
+    pub use crate::internal::extract::query::Query;
 
     /// Query extractor module.
     pub mod query {
-        pub use crate::utils::extract::query::{empty_to_none, Query};
+        pub use crate::internal::extract::query::{empty_to_none, Query};
     }
 
-    pub use crate::utils::extract::state::State;
+    pub use crate::internal::extract::state::State;
 }
 
 /// Response module contains different response functions.
 pub mod response {
     // base
-    pub use crate::utils::response::{
+    pub use crate::internal::response::{
         CreateResponse, Response, ResponseFunctions,
     };
 
     /// JSON module.
     pub mod json {
         // base
-        pub use crate::utils::response::json::{
+        pub use crate::internal::response::json::{
             CreateJsonResponse, JsonResponse, JsonResponseError,
         };
 
         // success
-        pub use crate::utils::response::json::success::JsonSuccessResponseFunctions;
+        pub use crate::internal::response::json::success::JsonSuccessResponseFunctions;
 
         // failure
-        pub use crate::utils::response::json::failure::JsonFailureResponseFunctions;
+        pub use crate::internal::response::json::failure::JsonFailureResponseFunctions;
 
         // error
-        pub use crate::utils::response::json::error::JsonResponseErrorCode;
+        pub use crate::internal::response::json::error::JsonResponseErrorCode;
     }
 
     /// Header module.
     pub mod header {
-        pub use crate::utils::response::header::{
+        pub use crate::internal::response::header::{
             get_header_from_key_value, get_header_name_from_key,
             get_header_value_from_value,
         };
