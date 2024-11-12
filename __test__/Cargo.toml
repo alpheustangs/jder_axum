@@ -9,4 +9,4 @@ axum-test = "^16.3.0"
 axum_typed_multipart = "~0.13.2"
 jder_axum = { workspace = true }
 tokio = { version = "^1.41.1", features = ["full"] }
-serde = "^1.0.214"
+serde = "^1.0.215"
