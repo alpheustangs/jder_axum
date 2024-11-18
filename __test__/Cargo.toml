@@ -4,7 +4,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = { version = "~0.7.7", features = ["multipart"] }
+axum = { version = "~0.7.9", features = ["multipart"] }
 axum-test = "^16.3.0"
 axum_typed_multipart = "~0.13.2"
 jder_axum = { workspace = true }
