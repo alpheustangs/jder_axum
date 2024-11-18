@@ -32,7 +32,7 @@ name = "jder_axum"
 path = "src/lib.rs"
 
 [dependencies]
-axum = { version = "~0.7.7", features = ["multipart"] }
+axum = { version = "~0.7.9", features = ["multipart"] }
 axum-core = "~0.4.5"
 axum_typed_multipart = "~0.13.2"
 bytes = "^1.8.0"
