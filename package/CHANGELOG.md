@@ -1,3 +1,10 @@
+## 0.3.1 (2024-12-16)
+
+### What's Changed
+
+- Update dependencies
+- Update documentation
+
 ## 0.3.0 (2024-10-26)
 
 ### Breaking Changes
