@@ -33,7 +33,7 @@ path = "src/lib.rs"
 
 [dependencies]
 axum = { version = "~0.7.9", features = ["multipart"] }
-axum-core = "~0.4.5"
+axum-core = "~0.5.0"
 axum_typed_multipart = "~0.14.0"
 bytes = "^1.9.0"
 serde = { version = "^1.0.216", features = ["derive"] }
