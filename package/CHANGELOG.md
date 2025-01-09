@@ -1,3 +1,10 @@
+## 0.4.0 (2025-01-09)
+
+### What's Changed
+
+- Add support for axum 0.8
+- Update dependencies
+
 ## 0.3.1 (2024-12-16)
 
 ### What's Changed

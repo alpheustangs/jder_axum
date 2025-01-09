@@ -1,10 +1,10 @@
 [package]
 name = "jder_axum"
-version = "0.3.1"
+version = "0.4.0"
 authors = ["Alpheus Tang"]
 edition = "2021"
 description = """
-A response builder for Axum
+A response builder for axum
 """
 readme = "README.md"
 homepage = "https://github.com/alpheustangs/jder_axum"
@@ -32,9 +32,10 @@ name = "jder_axum"
 path = "src/lib.rs"
 
 [dependencies]
-axum = { version = "~0.7.9", features = ["multipart"] }
-axum-core = "~0.4.5"
-axum_typed_multipart = "~0.14.0"
+axum ={ workspace = true }
+axum-core = "~0.5.0"
+axum-extra = "~0.10.0"
+axum_typed_multipart = { workspace = true }
 bytes = "^1.9.0"
-serde = { version = "^1.0.216", features = ["derive"] }
-serde_json = "^1.0.133"
+serde = { workspace = true }
+serde_json = "^1.0.135"

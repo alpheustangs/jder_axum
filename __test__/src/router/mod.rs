@@ -53,12 +53,12 @@ pub fn create_router() -> IntoMakeServiceWithConnectInfo<Router, SocketAddr> {
         .route("/nested_path", post(route_nested_path))
         .route("/original_uri", post(route_original_uri))
         .nest(
-            "/:id",
+            "/{id}",
             Router::new()
                 .route("/nested_path", post(route_nested_path))
                 .route("/original_uri", post(route_original_uri)),
         )
-        .route("/path/:id/:name", post(route_path))
+        .route("/path/{id}/{name}", post(route_path))
         .route("/query", post(route_query))
         .route("/state", post(route_state))
         .layer(DefaultBodyLimit::disable())

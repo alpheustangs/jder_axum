@@ -1,8 +1,8 @@
 use axum::{
-    async_trait,
-    extract::{rejection::HostRejection, FromRequestParts, Host as _Host},
+    extract::FromRequestParts,
     http::{request::Parts, StatusCode},
 };
+use axum_extra::extract::{rejection::HostRejection, Host as _Host};
 
 use crate::internal::response::{
     json::{error::JsonResponseErrorCode, CreateJsonResponse},
@@ -25,7 +25,6 @@ use crate::internal::response::{
 #[derive(Debug, Clone)]
 pub struct Host(pub String);
 
-#[async_trait]
 impl<S> FromRequestParts<S> for Host
 where
     S: Send + Sync,

@@ -1,7 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
 use axum::{
-    async_trait,
     extract::{FromRef, FromRequestParts, State as _State},
     http::{request::Parts, StatusCode},
 };
@@ -78,7 +77,6 @@ use crate::internal::response::{
 #[derive(Debug, Clone, Copy, Default)]
 pub struct State<S>(pub S);
 
-#[async_trait]
 impl<O, I> FromRequestParts<O> for State<I>
 where
     I: FromRef<O>,

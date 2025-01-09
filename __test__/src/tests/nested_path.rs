@@ -33,6 +33,6 @@ mod test {
 
         let data: RouteNestedPathResponseData = res.data.unwrap();
 
-        assert_eq!(data.path, "/:id".to_string());
+        assert_eq!(data.path, "/{id}".to_string());
     }
 }

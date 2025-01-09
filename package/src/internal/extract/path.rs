@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::{
         path::ErrorKind, rejection::PathRejection, FromRequestParts,
         Path as _Path,
@@ -35,7 +34,6 @@ use crate::internal::response::{
 #[derive(Debug)]
 pub struct Path<T>(pub T);
 
-#[async_trait]
 impl<T, S> FromRequestParts<S> for Path<T>
 where
     T: DeserializeOwned + Send,

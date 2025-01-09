@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use axum::{
-    async_trait,
     extract::{
         rejection::MatchedPathRejection, FromRequestParts,
         MatchedPath as _MatchedPath,
@@ -45,7 +44,6 @@ impl MatchedPath {
     }
 }
 
-#[async_trait]
 impl<S> FromRequestParts<S> for MatchedPath
 where
     S: Send + Sync,

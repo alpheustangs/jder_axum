@@ -4,9 +4,9 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = { version = "~0.7.9", features = ["multipart"] }
-axum-test = "^16.4.1"
-axum_typed_multipart = "~0.14.0"
+axum = { workspace = true }
+axum-test = "^17.0.1"
+axum_typed_multipart = { workspace = true }
 jder_axum = { workspace = true }
-tokio = { version = "^1.42.0", features = ["full"] }
-serde = "^1.0.216"
+tokio = { version = "^1.43.0", features = ["full"] }
+serde = { workspace = true }

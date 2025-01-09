@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::{rejection::JsonRejection, FromRequest, Request},
     http::{header, StatusCode},
     response::IntoResponse,
@@ -94,7 +93,6 @@ fn match_rejection(rejection: JsonRejection) -> Response {
     }
 }
 
-#[async_trait]
 impl<T, S> FromRequest<S> for Json<T>
 where
     T: DeserializeOwned,

@@ -5,6 +5,7 @@ mod test {
         multipart::{MultipartForm, Part},
         TestResponse, TestServer,
     };
+    use jder_axum::response::json::JsonResponse;
 
     use crate::router::create_server;
 
@@ -25,20 +26,22 @@ mod test {
     async fn test_error_nobody() {
         let server: TestServer = create_server();
 
-        let res: TestResponse = server.post("/multipart/file").await;
+        let res: JsonResponse =
+            server.post("/multipart/file").await.json::<JsonResponse>();
 
-        assert_eq!(res.status_code(), StatusCode::NOT_FOUND);
+        assert_eq!(res.success, false);
     }
 
     #[tokio::test]
     async fn test_error_empty_body() {
         let server: TestServer = create_server();
 
-        let res: TestResponse = server
+        let res: JsonResponse = server
             .post("/multipart/file")
             .multipart(MultipartForm::new())
-            .await;
+            .await
+            .json::<JsonResponse>();
 
-        assert_eq!(res.status_code(), StatusCode::NOT_FOUND);
+        assert_eq!(res.success, false);
     }
 }

@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::{
         rejection::ExtensionRejection, ConnectInfo as _ConnectInfo,
         FromRequestParts,
@@ -52,7 +51,6 @@ use crate::internal::response::{
 #[derive(Debug, Clone, Copy)]
 pub struct ConnectInfo<T>(pub T);
 
-#[async_trait]
 impl<S, T> FromRequestParts<S> for ConnectInfo<T>
 where
     S: Send + Sync,

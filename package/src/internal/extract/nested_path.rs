@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use axum::{
-    async_trait,
     extract::{FromRequestParts, NestedPath as _NestedPath},
     http::{request::Parts, StatusCode},
 };
@@ -45,7 +44,6 @@ impl NestedPath {
     }
 }
 
-#[async_trait]
 impl<S> FromRequestParts<S> for NestedPath
 where
     S: Send + Sync,

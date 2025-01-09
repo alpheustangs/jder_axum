@@ -8,29 +8,27 @@ use jder_axum::{
     response::{json::CreateJsonResponse, CreateResponse, Response},
 };
 
-#[derive(TryFromMultipart)]
+#[derive(Debug, TryFromMultipart)]
 pub struct RouteMultipartFileData {
     #[form_data(limit = "10MiB")]
     image: Option<FieldData<Bytes>>,
 }
 
+#[axum::debug_handler]
 pub async fn route_multipart_file(
-    data: Option<Multipart<RouteMultipartFileData>>
+    data: Multipart<RouteMultipartFileData>
 ) -> Response {
-    match data {
-        | Some(data) => match &data.image {
-            | Some(image) => {
-                return CreateResponse::success()
-                    .header(
-                        header::CONTENT_TYPE,
-                        match &image.metadata.content_type {
-                            | Some(content_type) => content_type,
-                            | None => "text/plain",
-                        },
-                    )
-                    .body(image.contents.clone());
-            },
-            | None => {},
+    match &data.image {
+        | Some(image) => {
+            return CreateResponse::success()
+                .header(
+                    header::CONTENT_TYPE,
+                    match &image.metadata.content_type {
+                        | Some(content_type) => content_type,
+                        | None => "text/plain",
+                    },
+                )
+                .body(image.contents.clone());
         },
         | None => {},
     }

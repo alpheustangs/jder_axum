@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::{rejection::QueryRejection, FromRequestParts, Query as _Query},
     http::{request::Parts, StatusCode},
 };
@@ -83,7 +82,6 @@ where
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Query<T>(pub T);
 
-#[async_trait]
 impl<T, S> FromRequestParts<S> for Query<T>
 where
     T: DeserializeOwned + Send,

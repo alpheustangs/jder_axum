@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::{FromRequestParts, OriginalUri as _OriginalUri},
     http::{request::Parts, StatusCode, Uri},
 };
@@ -41,7 +40,6 @@ use crate::internal::response::{
 #[derive(Debug, Clone)]
 pub struct OriginalUri(pub Uri);
 
-#[async_trait]
 impl<S> FromRequestParts<S> for OriginalUri
 where
     S: Send + Sync,
