@@ -2,7 +2,7 @@ use std::net::SocketAddr;
 
 use jder_axum::{
     extract::ConnectInfo,
-    response::{json::CreateJsonResponse, Response},
+    response::{Response, json::CreateJsonResponse},
 };
 use serde::{Deserialize, Serialize};
 

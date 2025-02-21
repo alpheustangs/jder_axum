@@ -1,18 +1,18 @@
 use axum::{
     extract::{
-        path::ErrorKind, rejection::PathRejection, FromRequestParts,
-        Path as _Path,
+        FromRequestParts, Path as _Path, path::ErrorKind,
+        rejection::PathRejection,
     },
-    http::{request::Parts, StatusCode},
+    http::{StatusCode, request::Parts},
 };
 use serde::de::DeserializeOwned;
 
 use crate::internal::response::{
-    json::{
-        error::JsonResponseErrorCode, failure::JsonFailureResponseFunctions,
-        CreateJsonResponse,
-    },
     Response,
+    json::{
+        CreateJsonResponse, error::JsonResponseErrorCode,
+        failure::JsonFailureResponseFunctions,
+    },
 };
 
 /// Extractor that parses path parameters.

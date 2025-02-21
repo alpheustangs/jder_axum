@@ -1,15 +1,15 @@
 use axum::{
-    extract::{rejection::JsonRejection, FromRequest, Request},
-    http::{header, StatusCode},
-    response::IntoResponse,
     Json as _Json,
+    extract::{FromRequest, Request, rejection::JsonRejection},
+    http::{StatusCode, header},
+    response::IntoResponse,
 };
-use bytes::{buf::Writer, BufMut, BytesMut};
-use serde::{de::DeserializeOwned, Serialize};
+use bytes::{BufMut, BytesMut, buf::Writer};
+use serde::{Serialize, de::DeserializeOwned};
 
 use crate::internal::response::{
-    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
+    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// JSON extractor / response.

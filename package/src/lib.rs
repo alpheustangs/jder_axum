@@ -98,7 +98,7 @@ pub mod extract {
 
     /// Query extractor module.
     pub mod query {
-        pub use crate::internal::extract::query::{empty_to_none, Query};
+        pub use crate::internal::extract::query::{Query, empty_to_none};
     }
 
     pub use crate::internal::extract::state::State;

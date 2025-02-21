@@ -1,11 +1,11 @@
 use axum::{
     extract::{FromRequestParts, OriginalUri as _OriginalUri},
-    http::{request::Parts, StatusCode, Uri},
+    http::{StatusCode, Uri, request::Parts},
 };
 
 use crate::internal::response::{
-    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
+    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Extractor that gets the original request URI regardless of nesting.

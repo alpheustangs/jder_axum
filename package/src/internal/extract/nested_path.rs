@@ -2,12 +2,12 @@ use std::sync::Arc;
 
 use axum::{
     extract::{FromRequestParts, NestedPath as _NestedPath},
-    http::{request::Parts, StatusCode},
+    http::{StatusCode, request::Parts},
 };
 
 use crate::internal::response::{
-    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
+    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Access the path the matched the route is nested at.

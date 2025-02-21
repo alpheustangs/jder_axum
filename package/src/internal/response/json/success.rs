@@ -4,8 +4,8 @@ use axum::http::{
 use serde::Serialize;
 
 use crate::internal::response::{
-    json::{create_json_response_send, JsonResponseState},
     Response,
+    json::{JsonResponseState, create_json_response_send},
 };
 
 /// Functions for creating a success response.

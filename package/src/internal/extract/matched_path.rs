@@ -2,15 +2,15 @@ use std::sync::Arc;
 
 use axum::{
     extract::{
-        rejection::MatchedPathRejection, FromRequestParts,
-        MatchedPath as _MatchedPath,
+        FromRequestParts, MatchedPath as _MatchedPath,
+        rejection::MatchedPathRejection,
     },
-    http::{request::Parts, StatusCode},
+    http::{StatusCode, request::Parts},
 };
 
 use crate::internal::response::{
-    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
+    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Access the path in the router that matches the request.

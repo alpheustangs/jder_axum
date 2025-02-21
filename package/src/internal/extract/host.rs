@@ -1,12 +1,12 @@
 use axum::{
     extract::FromRequestParts,
-    http::{request::Parts, StatusCode},
+    http::{StatusCode, request::Parts},
 };
-use axum_extra::extract::{rejection::HostRejection, Host as _Host};
+use axum_extra::extract::{Host as _Host, rejection::HostRejection};
 
 use crate::internal::response::{
-    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
+    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Extractor that resolves the hostname of the request.

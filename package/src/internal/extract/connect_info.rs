@@ -1,14 +1,14 @@
 use axum::{
     extract::{
-        rejection::ExtensionRejection, ConnectInfo as _ConnectInfo,
-        FromRequestParts,
+        ConnectInfo as _ConnectInfo, FromRequestParts,
+        rejection::ExtensionRejection,
     },
-    http::{request::Parts, StatusCode},
+    http::{StatusCode, request::Parts},
 };
 
 use crate::internal::response::{
-    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
+    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Extractor for getting connection information produced

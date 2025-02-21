@@ -1,15 +1,15 @@
 use axum::{
-    extract::{rejection::QueryRejection, FromRequestParts, Query as _Query},
-    http::{request::Parts, StatusCode},
+    extract::{FromRequestParts, Query as _Query, rejection::QueryRejection},
+    http::{StatusCode, request::Parts},
 };
 use serde::{
-    de::{self, DeserializeOwned},
     Deserialize, Deserializer,
+    de::{self, DeserializeOwned},
 };
 
 use crate::internal::response::{
-    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
+    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Convert an empty string to None instead of returning an error.

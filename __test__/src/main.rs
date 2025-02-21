@@ -3,7 +3,7 @@ mod router;
 use std::net::SocketAddr;
 
 use axum::{
-    extract::connect_info::IntoMakeServiceWithConnectInfo, serve, Router,
+    Router, extract::connect_info::IntoMakeServiceWithConnectInfo, serve,
 };
 use tokio::net::TcpListener;
 

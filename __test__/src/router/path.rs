@@ -1,7 +1,7 @@
 use axum::http::StatusCode;
 use jder_axum::{
     extract::Path,
-    response::{json::CreateJsonResponse, Response},
+    response::{Response, json::CreateJsonResponse},
 };
 use serde::{Deserialize, Serialize};
 

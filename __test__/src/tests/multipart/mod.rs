@@ -2,7 +2,7 @@ pub mod file;
 
 #[cfg(test)]
 mod test {
-    use axum_test::{multipart::MultipartForm, TestServer};
+    use axum_test::{TestServer, multipart::MultipartForm};
     use jder_axum::{
         extract::multipart::MultipartFailureResponse,
         response::json::{JsonResponse, JsonResponseErrorCode},
