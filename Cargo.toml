@@ -9,4 +9,4 @@ members = [
 axum = { version = "~0.8.2", features = ["multipart", "macros"] }
 axum_typed_multipart = "~0.15.1"
 jder_axum = { path = "./package" }
-serde = { version = "^1.0.217", features = ["derive"] }
+serde = { version = "^1.0.218", features = ["derive"] }
