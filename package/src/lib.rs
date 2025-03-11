@@ -73,15 +73,19 @@ mod internal;
 pub mod extract {
     pub use crate::internal::extract::connect_info::ConnectInfo;
 
+    #[cfg(feature = "extra")]
     pub use crate::internal::extract::host::Host;
 
     pub use crate::internal::extract::json::Json;
 
     pub use crate::internal::extract::matched_path::MatchedPath;
 
+    #[cfg(feature = "multipart")]
     pub use crate::internal::extract::multipart::Multipart;
 
-    /// Multipart extractor module.
+    /// Multipart extractor module,
+    /// available with `multipart` feature.
+    #[cfg(feature = "multipart")]
     pub mod multipart {
         pub use crate::internal::extract::multipart::{
             Multipart, MultipartFailureResponse,

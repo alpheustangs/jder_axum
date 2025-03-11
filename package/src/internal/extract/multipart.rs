@@ -31,7 +31,8 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
     }
 }
 
-/// Extractor that parses `multipart/form-data` requests.
+/// Extractor that parses `multipart/form-data` requests,
+/// available with `multipart` feature.
 ///
 /// Check [`axum_typed_multipart`] for more information.
 ///

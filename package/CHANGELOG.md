@@ -1,3 +1,17 @@
+## 0.5.0
+
+### Breaking Changes
+
+- Move multipart module behind `multipart` feature
+
+### What's New
+
+- Add `multipart`, `extra`, `utoipa` features
+
+### What's Changed
+
+- Update to 2024 edition
+
 ## 0.4.0 (2025-01-09)
 
 ### What's Changed

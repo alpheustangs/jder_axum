@@ -28,6 +28,9 @@ include = [
     "README.md",
 ]
 
+[package.metadata.docs.rs]
+features = ["all"]
+
 [lib]
 name = "jder_axum"
 path = "src/lib.rs"
@@ -35,8 +38,25 @@ path = "src/lib.rs"
 [dependencies]
 axum ={ workspace = true }
 axum-core = "~0.5.1"
-axum-extra = "~0.10.0"
-axum_typed_multipart = { workspace = true }
 bytes = "^1.10.1"
 serde = { workspace = true }
 serde_json = "^1.0.140"
+
+[dependencies.axum_typed_multipart]
+workspace = true
+optional = true
+
+[dependencies.axum-extra]
+version = "~0.10.0"
+optional = true
+
+[dependencies.utoipa]
+version = "^5.3.1"
+optional = true
+
+[features]
+default = []
+multipart = ["dep:axum_typed_multipart"]
+extra = ["dep:axum-extra"]
+utoipa = ["dep:utoipa"]
+all = ["multipart", "extra", "utoipa"]

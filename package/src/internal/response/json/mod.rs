@@ -19,6 +19,7 @@ use crate::internal::response::json::{
 
 /// JSON response error.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "utoipa", derive(utoipa::ToSchema))]
 pub struct JsonResponseError {
     /// Error code.
     pub code: String,
@@ -30,6 +31,7 @@ pub struct JsonResponseError {
 
 /// JSON response.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "utoipa", derive(utoipa::ToSchema))]
 pub struct JsonResponse<D = ()> {
     /// Whether the response is successful.
     pub success: bool,

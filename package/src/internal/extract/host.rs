@@ -9,7 +9,8 @@ use crate::internal::response::{
     json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
-/// Extractor that resolves the hostname of the request.
+/// Extractor that resolves the hostname of the request,
+/// available with `extra` feature.
 ///
 /// Check [`Host`](axum::extract::Host) for more information.
 ///
