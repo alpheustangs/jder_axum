@@ -16,6 +16,10 @@ updates:
           - dependency-name: "axum-extra"
             update-types:
                 - "version-update:semver-patch"
+          - dependency-name: "axum-test"
+            update-types:
+                - "version-update:semver-minor"
+                - "version-update:semver-patch"
           - dependency-name: "axum_typed_multipart"
             update-types:
                 - "version-update:semver-minor"
