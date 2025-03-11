@@ -18,6 +18,9 @@ use crate::internal::response::json::{
 };
 
 /// JSON response error.
+///
+/// For API documentation generation with utoipa,
+/// `ToSchema` derive is available with the `utoipa` feature.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "utoipa", derive(utoipa::ToSchema))]
 pub struct JsonResponseError {
@@ -30,6 +33,9 @@ pub struct JsonResponseError {
 }
 
 /// JSON response.
+///
+/// For API documentation generation with utoipa,
+/// `ToSchema` derive is available with the `utoipa` feature.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(feature = "utoipa", derive(utoipa::ToSchema))]
 pub struct JsonResponse<D = ()> {

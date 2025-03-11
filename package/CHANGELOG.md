@@ -2,15 +2,27 @@
 
 ### Breaking Changes
 
+- Move `Host` struct behind `extra` feature
 - Move multipart module behind `multipart` feature
 
 ### What's New
 
-- Add `multipart`, `extra`, `utoipa` features
+- Add `extra`, `multipart`, `utoipa` features
+- Add new derive to struct for `utoipa` feature
+    - `JsonResponse`
+    - `JsonResponseError`
 
 ### What's Changed
 
 - Update to 2024 edition
+
+### Migrating from 0.4.0 to 0.5.0
+
+```diff
+[dependencies]
+- jder_axum = "0.4.0"
++ jder_axum = { version = "0.5.0", features = ["extra", "multipart"] }
+```
 
 ## 0.4.0 (2025-01-09)
 
