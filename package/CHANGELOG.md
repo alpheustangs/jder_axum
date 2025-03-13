@@ -4,9 +4,11 @@
 
 - Move `Host` struct behind `extra` feature
 - Move multipart module behind `multipart` feature
+- Rename `empty_to_none` to `optional_query`
 
 ### What's New
 
+- Add `Form` extractor
 - Add `extra`, `multipart`, `utoipa` features
 - Add new derive to struct for `utoipa` feature
     - `JsonResponse`
@@ -14,6 +16,7 @@
 
 ### What's Changed
 
+- Optimize for axum 0.8
 - Update to 2024 edition
 
 ### Migrating from 0.4.0 to 0.5.0

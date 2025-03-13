@@ -2,12 +2,12 @@ use std::sync::Arc;
 
 use axum::{
     extract::{FromRequestParts, NestedPath as _NestedPath},
-    http::{StatusCode, request::Parts},
+    http::{request::Parts, StatusCode},
 };
 
-use crate::internal::response::{
+use crate::response::{
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
-    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Access the path the matched the route is nested at.
@@ -25,16 +25,16 @@ use crate::internal::response::{
 ///
 /// async fn route(nested_path: NestedPath) {
 ///     let path: &str = nested_path.as_str();
-///     // "/:id"
+///     // "/{id}"
 /// }
 ///
 /// let router_users: Router = Router::new()
 ///     .route("/profile", get(route));
 ///
 /// let router: Router = Router::new()
-///     .nest("/:id", router_users);
+///     .nest("/{id}", router_users);
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct NestedPath(Arc<str>);
 
 impl NestedPath {

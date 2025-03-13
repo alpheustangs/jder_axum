@@ -1,11 +1,11 @@
 use axum::{
     extract::{FromRequestParts, OriginalUri as _OriginalUri},
-    http::{StatusCode, Uri, request::Parts},
+    http::{request::Parts, StatusCode, Uri},
 };
 
-use crate::internal::response::{
+use crate::response::{
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
-    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Extractor that gets the original request URI regardless of nesting.
@@ -35,9 +35,9 @@ use crate::internal::response::{
 ///     .route("/profile", get(route));
 ///
 /// let app: Router = Router::new()
-///     .nest("/:id", router_users);
+///     .nest("/{id}", router_users);
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct OriginalUri(pub Uri);
 
 impl<S> FromRequestParts<S> for OriginalUri

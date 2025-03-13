@@ -1,14 +1,14 @@
 use axum::{
     extract::{
-        ConnectInfo as _ConnectInfo, FromRequestParts,
-        rejection::ExtensionRejection,
+        rejection::ExtensionRejection, ConnectInfo as _ConnectInfo,
+        FromRequestParts,
     },
-    http::{StatusCode, request::Parts},
+    http::{request::Parts, StatusCode},
 };
 
-use crate::internal::response::{
+use crate::response::{
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
-    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Extractor for getting connection information produced
@@ -31,14 +31,13 @@ use crate::internal::response::{
 /// async fn route(
 ///     ConnectInfo(addr): ConnectInfo<SocketAddr>
 /// ) {
-///     let ip: ipAddr = addr.ip();
+///     let ip: IpAddr = addr.ip();
 ///     let is_ipv4: bool = addr.is_ipv4();
 ///     let is_ipv6: bool = addr.is_ipv6();
 ///     let port: u16 = addr.port();
 /// }
 ///
-/// #[tokio::main]
-/// async fn main(){
+/// async fn example(){
 ///     let router: Router = Router::new()
 ///         .route("/", get(route));
 ///
@@ -48,7 +47,7 @@ use crate::internal::response::{
 ///     ).await.unwrap();
 /// }
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct ConnectInfo<T>(pub T);
 
 impl<S, T> FromRequestParts<S> for ConnectInfo<T>
@@ -81,3 +80,5 @@ where
         }
     }
 }
+
+axum_core::__impl_deref!(ConnectInfo);

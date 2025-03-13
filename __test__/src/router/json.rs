@@ -10,6 +10,7 @@ pub struct RouteJsonResponseData {
     pub name: Option<String>,
 }
 
+#[axum::debug_handler]
 pub async fn route_json(Json(data): Json<RouteJsonResponseData>) -> Response {
     CreateJsonResponse::success::<RouteJsonResponseData>()
         .data(RouteJsonResponseData { id: data.id, name: data.name })

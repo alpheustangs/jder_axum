@@ -17,6 +17,7 @@ pub struct AppState {
     pub view: Arc<Mutex<usize>>,
 }
 
+#[axum::debug_handler]
 pub async fn route_state(State(state): State<AppState>) -> Response {
     let mut view: MutexGuard<'_, usize> = state.view.lock().unwrap();
     *view += 1;

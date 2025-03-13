@@ -2,12 +2,12 @@ use std::ops::{Deref, DerefMut};
 
 use axum::{
     extract::{FromRef, FromRequestParts, State as _State},
-    http::{StatusCode, request::Parts},
+    http::{request::Parts, StatusCode},
 };
 
-use crate::internal::response::{
+use crate::response::{
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
-    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
 /// Extractor for state.

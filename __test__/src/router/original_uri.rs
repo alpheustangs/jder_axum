@@ -11,6 +11,7 @@ pub struct RouteOriginalUriResponseData {
     pub original_uri: String,
 }
 
+#[axum::debug_handler]
 pub async fn route_original_uri(
     uri: Uri,
     OriginalUri(path): OriginalUri,

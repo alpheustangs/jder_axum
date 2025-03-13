@@ -19,6 +19,7 @@ pub struct RouteMultipartResponseData {
     pub number: Option<usize>,
 }
 
+#[axum::debug_handler]
 pub async fn route_multipart(data: Multipart<RouteMultipartData>) -> Response {
     CreateJsonResponse::success::<RouteMultipartResponseData>()
         .data(RouteMultipartResponseData {

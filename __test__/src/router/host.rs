@@ -1,5 +1,5 @@
 use jder_axum::{
-    extract::Host,
+    extract::extra::Host,
     response::{Response, json::CreateJsonResponse},
 };
 use serde::{Deserialize, Serialize};
@@ -9,6 +9,7 @@ pub struct RouteHostResponseData {
     pub host: String,
 }
 
+#[axum::debug_handler]
 pub async fn route_host(host: Host) -> Response {
     CreateJsonResponse::success::<RouteHostResponseData>()
         .data(RouteHostResponseData { host: host.0 })

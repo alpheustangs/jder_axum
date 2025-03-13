@@ -9,6 +9,7 @@ pub struct RouteNestedPathResponseData {
     pub path: String,
 }
 
+#[axum::debug_handler]
 pub async fn route_nested_path(path: NestedPath) -> Response {
     CreateJsonResponse::success::<RouteNestedPathResponseData>()
         .data(RouteNestedPathResponseData { path: path.as_str().to_string() })

@@ -1,27 +1,29 @@
-pub mod error;
-pub mod failure;
-pub mod success;
+pub(crate) mod error;
+pub(crate) mod failure;
+pub(crate) mod success;
+
+pub use crate::response::json::success::JsonSuccessResponseFunctions;
+
+pub use crate::response::json::failure::JsonFailureResponseFunctions;
+
+pub use crate::response::json::error::JsonResponseErrorCode;
 
 use axum::{
     body::Body,
     http::{
-        HeaderMap, HeaderValue, StatusCode, Version, header, response::Builder,
+        header, response::Builder, HeaderMap, HeaderValue, StatusCode, Version,
     },
     response::Response,
 };
 use serde::{Deserialize, Serialize};
 
-use crate::internal::response::json::{
-    error::{FAILURE_RESPONSE_DEFAULT, JsonResponseErrorCode},
-    failure::JsonFailureResponseFunctions,
-    success::JsonSuccessResponseFunctions,
-};
+use crate::response::json::error::FAILURE_RESPONSE_DEFAULT;
 
 /// JSON response error.
 ///
 /// For API documentation generation with utoipa,
 /// `ToSchema` derive is available with the `utoipa` feature.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[cfg_attr(feature = "utoipa", derive(utoipa::ToSchema))]
 pub struct JsonResponseError {
     /// Error code.
@@ -36,7 +38,7 @@ pub struct JsonResponseError {
 ///
 /// For API documentation generation with utoipa,
 /// `ToSchema` derive is available with the `utoipa` feature.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[cfg_attr(feature = "utoipa", derive(utoipa::ToSchema))]
 pub struct JsonResponse<D = ()> {
     /// Whether the response is successful.
@@ -48,7 +50,7 @@ pub struct JsonResponse<D = ()> {
 }
 
 /// Internal state.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub(crate) struct JsonResponseState<D> {
     status: StatusCode,
     version: Version,
@@ -183,7 +185,7 @@ pub(crate) fn create_json_response_send<D: Serialize>(
 ///     CreateJsonResponse::failure().send()
 /// }
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct CreateJsonResponse;
 
 impl CreateJsonResponse {

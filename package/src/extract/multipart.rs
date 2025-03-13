@@ -1,10 +1,10 @@
 use axum::response::{IntoResponse, Response as AxumResponse};
 use axum_typed_multipart::{BaseMultipart, TypedMultipartError};
 
-use crate::internal::{
+use crate::{
     extract::json::Json,
     response::json::{
-        JsonResponse, JsonResponseError, error::JsonResponseErrorCode,
+        error::JsonResponseErrorCode, JsonResponse, JsonResponseError,
     },
 };
 

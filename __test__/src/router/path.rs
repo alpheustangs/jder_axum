@@ -11,6 +11,7 @@ pub struct RoutePathResponseData {
     pub name: String,
 }
 
+#[axum::debug_handler]
 pub async fn route_path(Path((id, name)): Path<(usize, String)>) -> Response {
     CreateJsonResponse::success::<RoutePathResponseData>()
         .status(StatusCode::CREATED)

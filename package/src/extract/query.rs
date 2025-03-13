@@ -1,18 +1,18 @@
 use axum::{
-    extract::{FromRequestParts, Query as _Query, rejection::QueryRejection},
-    http::{StatusCode, request::Parts},
+    extract::{rejection::QueryRejection, FromRequestParts, Query as _Query},
+    http::{request::Parts, StatusCode},
 };
 use serde::{
-    Deserialize, Deserializer,
     de::{self, DeserializeOwned},
+    Deserialize, Deserializer,
 };
 
-use crate::internal::response::{
+use crate::response::{
+    json::{error::JsonResponseErrorCode, CreateJsonResponse},
     Response,
-    json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
-/// Convert an empty string to None instead of returning an error.
+/// Convert empty query to None instead of returning an error.
 ///
 /// ## Example
 ///
@@ -20,12 +20,12 @@ use crate::internal::response::{
 /// use serde::Deserialize;
 /// use jder_axum::extract::query::{
 ///     Query,
-///     empty_to_none,
+///     optional_query,
 /// };
 ///
 /// #[derive(Deserialize)]
 /// struct QueryParams {
-///     #[serde(default, deserialize_with = "empty_to_none")]
+///     #[serde(default, deserialize_with = "optional_query")]
 ///     page: Option<usize>,
 ///     per_page: Option<usize>,
 /// }
@@ -38,7 +38,7 @@ use crate::internal::response::{
 ///     // ...
 /// }
 /// ```
-pub fn empty_to_none<'de, D, T>(de: D) -> Result<Option<T>, D::Error>
+pub fn optional_query<'de, D, T>(de: D) -> Result<Option<T>, D::Error>
 where
     D: Deserializer<'de>,
     T: std::str::FromStr,
@@ -55,7 +55,7 @@ where
 }
 
 /// Extractor that deserializes query strings into some type.
-/// To accept empty string, [`empty_to_none`] should be used.
+/// To accept empty query, [`optional_query`] should be used.
 ///
 /// Check [`Query`](axum::extract::Query) for more information.
 ///
@@ -112,3 +112,5 @@ where
         }
     }
 }
+
+axum_core::__impl_deref!(Query);

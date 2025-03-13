@@ -1,32 +1,22 @@
+pub mod optional;
+
 use axum::{
-    extract::FromRequestParts,
-    http::{StatusCode, request::Parts},
-};
-use axum_extra::extract::{Host as _Host, rejection::HostRejection};
-
-use crate::internal::response::{
-    Response,
-    json::{CreateJsonResponse, error::JsonResponseErrorCode},
+    extract::{
+        rejection::MatchedPathRejection, FromRequestParts,
+        MatchedPath as _MatchedPath,
+    },
+    http::{request::Parts, StatusCode},
 };
 
-/// Extractor that resolves the hostname of the request,
-/// available with `extra` feature.
-///
-/// Check [`Host`](axum::extract::Host) for more information.
-///
-/// ## Example
-///
-/// ```no_run
-/// use jder_axum::extract::Host;
-///
-/// async fn route(host: Host) {
-///     let host: String = host.0;
-/// }
-/// ```
-#[derive(Debug, Clone)]
-pub struct Host(pub String);
+use crate::{
+    extract::matched_path::MatchedPath,
+    response::{
+        json::{error::JsonResponseErrorCode, CreateJsonResponse},
+        Response,
+    },
+};
 
-impl<S> FromRequestParts<S> for Host
+impl<S> FromRequestParts<S> for MatchedPath
 where
     S: Send + Sync,
 {
@@ -36,10 +26,10 @@ where
         parts: &mut Parts,
         state: &S,
     ) -> Result<Self, Self::Rejection> {
-        match _Host::from_request_parts(parts, state).await {
-            | Ok(value) => Ok(Self(value.0)),
+        match _MatchedPath::from_request_parts(parts, state).await {
+            | Ok(value) => Ok(MatchedPath(value.as_str().into())),
             | Err(rejection) => Err(match rejection {
-                | HostRejection::FailedToResolveHost(inner) => {
+                | MatchedPathRejection::MatchedPathMissing(inner) => {
                     CreateJsonResponse::failure()
                         .status(inner.status())
                         .error_code(JsonResponseErrorCode::Parse.as_str())

@@ -11,6 +11,7 @@ pub struct RouteConnectInfoResponseData {
     pub addr: String,
 }
 
+#[axum::debug_handler]
 pub async fn route_connect_info(
     ConnectInfo(addr): ConnectInfo<SocketAddr>
 ) -> Response {
