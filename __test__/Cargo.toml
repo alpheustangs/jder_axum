@@ -8,5 +8,5 @@ axum = { workspace = true }
 axum-test = "^17.2.0"
 axum_typed_multipart = { workspace = true }
 jder_axum = { workspace = true }
-tokio = { version = "^1.44.0", features = ["full"] }
+tokio = { version = "^1.44.1", features = ["full"] }
 serde = { workspace = true }
