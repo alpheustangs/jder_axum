@@ -9,7 +9,7 @@ pub mod from_request_parts;
 /// ```no_run
 /// use jder_axum::extract::Path;
 ///
-/// // /users/:id/:name
+/// // /users/{id}/{name}
 /// async fn route(
 ///     Path((id, name)): Path<(String, String)>,
 /// ) {

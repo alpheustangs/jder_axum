@@ -16,7 +16,7 @@
 
 ### What's Changed
 
-- Optimize for axum 0.8
+- Update minimum `axum` version to `0.8.3`
 - Update to 2024 edition
 
 ### Migrating from 0.4.0 to 0.5.0
