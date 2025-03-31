@@ -34,7 +34,7 @@ path = "src/lib.rs"
 
 [dependencies]
 axum ={ workspace = true }
-axum-core = "~0.5.1"
+axum-core = "~0.5.2"
 axum-extra = "~0.10.0"
 axum_typed_multipart = { workspace = true }
 bytes = "^1.10.1"
