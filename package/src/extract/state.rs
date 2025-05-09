@@ -1,11 +1,12 @@
 use std::ops::{Deref, DerefMut};
 
 use axum::{
-    extract::{FromRef, FromRequestParts, State as _State},
+    extract::State as _State,
     http::{StatusCode, request::Parts},
 };
+use axum_core::extract::{FromRef, FromRequestParts};
 
-use crate::internal::response::{
+use crate::response::{
     Response,
     json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
@@ -89,7 +90,7 @@ where
         state: &O,
     ) -> Result<Self, Self::Rejection> {
         match _State::<I>::from_request_parts(parts, state).await {
-            | Ok(value) => Ok(Self(value.0)),
+            | Ok(val) => Ok(Self(val.0)),
             | Err(_) => Err(CreateJsonResponse::failure()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
                 .error_code(JsonResponseErrorCode::Server.as_str())

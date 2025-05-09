@@ -1,4 +1,5 @@
 pub mod connect_info;
+pub mod form;
 pub mod header;
 pub mod host;
 pub mod json;
@@ -9,6 +10,7 @@ pub mod original_uri;
 pub mod path;
 pub mod query;
 pub mod state;
+pub mod typed_header;
 
 #[cfg(test)]
 mod test {

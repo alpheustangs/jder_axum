@@ -1,11 +1,9 @@
 use std::sync::Arc;
 
-use axum::{
-    extract::{FromRequestParts, NestedPath as _NestedPath},
-    http::{StatusCode, request::Parts},
-};
+use axum::{extract::NestedPath as _NestedPath, http::request::Parts};
+use axum_core::extract::FromRequestParts;
 
-use crate::internal::response::{
+use crate::response::{
     Response,
     json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
@@ -25,14 +23,14 @@ use crate::internal::response::{
 ///
 /// async fn route(nested_path: NestedPath) {
 ///     let path: &str = nested_path.as_str();
-///     // "/:id"
+///     // "/{id}"
 /// }
 ///
 /// let router_users: Router = Router::new()
 ///     .route("/profile", get(route));
 ///
 /// let router: Router = Router::new()
-///     .nest("/:id", router_users);
+///     .nest("/{id}", router_users);
 /// ```
 #[derive(Debug, Clone)]
 pub struct NestedPath(Arc<str>);
@@ -55,11 +53,11 @@ where
         state: &S,
     ) -> Result<Self, Self::Rejection> {
         match _NestedPath::from_request_parts(parts, state).await {
-            | Ok(value) => Ok(NestedPath(value.as_str().into())),
-            | Err(rejection) => Err(CreateJsonResponse::failure()
-                .status(StatusCode::INTERNAL_SERVER_ERROR)
-                .error_code(JsonResponseErrorCode::Server.as_str())
-                .error_message(rejection.body_text())
+            | Ok(val) => Ok(NestedPath(val.as_str().into())),
+            | Err(rej) => Err(CreateJsonResponse::failure()
+                .status(rej.status())
+                .error_code(JsonResponseErrorCode::Parse.as_str())
+                .error_message(rej.body_text())
                 .send()),
         }
     }

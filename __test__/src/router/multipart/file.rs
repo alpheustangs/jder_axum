@@ -4,7 +4,7 @@ use axum::{
 };
 use axum_typed_multipart::{FieldData, TryFromMultipart};
 use jder_axum::{
-    extract::multipart::Multipart,
+    extract::multipart::typed::Multipart,
     response::{CreateResponse, Response, json::CreateJsonResponse},
 };
 

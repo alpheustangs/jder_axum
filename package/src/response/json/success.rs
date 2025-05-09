@@ -3,13 +3,13 @@ use axum::http::{
 };
 use serde::Serialize;
 
-use crate::internal::response::{
+use crate::response::{
     Response,
     json::{JsonResponseState, create_json_response_send},
 };
 
 /// Functions for creating a success response.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct JsonSuccessResponseFunctions<D> {
     /// Internal state.
     pub(crate) state: JsonResponseState<D>,

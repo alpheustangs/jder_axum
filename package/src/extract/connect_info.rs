@@ -1,12 +1,7 @@
-use axum::{
-    extract::{
-        ConnectInfo as _ConnectInfo, FromRequestParts,
-        rejection::ExtensionRejection,
-    },
-    http::{StatusCode, request::Parts},
-};
+use axum::{extract::ConnectInfo as _ConnectInfo, http::request::Parts};
+use axum_core::extract::FromRequestParts;
 
-use crate::internal::response::{
+use crate::response::{
     Response,
     json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
@@ -31,14 +26,13 @@ use crate::internal::response::{
 /// async fn route(
 ///     ConnectInfo(addr): ConnectInfo<SocketAddr>
 /// ) {
-///     let ip: ipAddr = addr.ip();
+///     let ip: IpAddr = addr.ip();
 ///     let is_ipv4: bool = addr.is_ipv4();
 ///     let is_ipv6: bool = addr.is_ipv6();
 ///     let port: u16 = addr.port();
 /// }
 ///
-/// #[tokio::main]
-/// async fn main(){
+/// async fn example(){
 ///     let router: Router = Router::new()
 ///         .route("/", get(route));
 ///
@@ -63,21 +57,14 @@ where
         state: &S,
     ) -> Result<Self, Self::Rejection> {
         match _ConnectInfo::<T>::from_request_parts(parts, state).await {
-            | Ok(value) => Ok(Self(value.0)),
-            | Err(rejection) => Err(match rejection {
-                | ExtensionRejection::MissingExtension(inner) => {
-                    CreateJsonResponse::failure()
-                        .status(inner.status())
-                        .error_code(JsonResponseErrorCode::Parse.as_str())
-                        .error_message(inner.body_text())
-                        .send()
-                },
-                | _ => CreateJsonResponse::failure()
-                    .status(StatusCode::INTERNAL_SERVER_ERROR)
-                    .error_code(JsonResponseErrorCode::Server.as_str())
-                    .error_message(rejection.body_text())
-                    .send(),
-            }),
+            | Ok(val) => Ok(Self(val.0)),
+            | Err(rej) => Err(CreateJsonResponse::failure()
+                .status(rej.status())
+                .error_code(JsonResponseErrorCode::Parse.as_str())
+                .error_message(rej.body_text())
+                .send()),
         }
     }
 }
+
+axum_core::__impl_deref!(ConnectInfo);

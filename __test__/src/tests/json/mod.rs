@@ -1,3 +1,5 @@
+pub mod optional;
+
 #[cfg(test)]
 mod test {
     use axum_test::TestServer;

@@ -3,7 +3,7 @@ use axum::http::{
 };
 use serde::Serialize;
 
-use crate::internal::response::{
+use crate::response::{
     Response,
     json::{
         JsonResponseError, JsonResponseState, create_json_response_send,
@@ -12,7 +12,7 @@ use crate::internal::response::{
 };
 
 /// Functions for creating an failure response.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct JsonFailureResponseFunctions<D> {
     pub(crate) state: JsonResponseState<D>,
 }

@@ -6,7 +6,7 @@ members = [
 ]
 
 [workspace.dependencies]
-axum = { version = "~0.8.2", features = ["multipart", "macros"] }
-axum_typed_multipart = "~0.15.1"
-jder_axum = { path = "./package" }
-serde = { version = "^1.0.219", features = ["derive"] }
+axum = { version = "~0.8.3", features = ["macros"] }
+axum_typed_multipart =  "~0.16.0"
+jder_axum = { path = "./package", features = ["all"] }
+serde = { version = "^1", features = ["derive"] }

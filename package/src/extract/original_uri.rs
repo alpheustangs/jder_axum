@@ -1,9 +1,10 @@
 use axum::{
-    extract::{FromRequestParts, OriginalUri as _OriginalUri},
+    extract::OriginalUri as _OriginalUri,
     http::{StatusCode, Uri, request::Parts},
 };
+use axum_core::extract::FromRequestParts;
 
-use crate::internal::response::{
+use crate::response::{
     Response,
     json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
@@ -35,7 +36,7 @@ use crate::internal::response::{
 ///     .route("/profile", get(route));
 ///
 /// let app: Router = Router::new()
-///     .nest("/:id", router_users);
+///     .nest("/{id}", router_users);
 /// ```
 #[derive(Debug, Clone)]
 pub struct OriginalUri(pub Uri);
@@ -51,11 +52,10 @@ where
         state: &S,
     ) -> Result<Self, Self::Rejection> {
         match _OriginalUri::from_request_parts(parts, state).await {
-            | Ok(value) => Ok(Self(value.0)),
-            | Err(rejection) => Err(CreateJsonResponse::failure()
+            | Ok(val) => Ok(Self(val.0)),
+            | Err(_) => Err(CreateJsonResponse::failure()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
                 .error_code(JsonResponseErrorCode::Server.as_str())
-                .error_message(rejection.to_string())
                 .send()),
         }
     }

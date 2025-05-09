@@ -7,6 +7,7 @@ publish = false
 axum = { workspace = true }
 axum-test = "^17.2.0"
 axum_typed_multipart = { workspace = true }
+headers = "~0.4.0"
 jder_axum = { workspace = true }
 tokio = { version = "^1.44.0", features = ["full"] }
 serde = { workspace = true }

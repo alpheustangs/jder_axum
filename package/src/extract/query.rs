@@ -1,18 +1,19 @@
 use axum::{
-    extract::{FromRequestParts, Query as _Query, rejection::QueryRejection},
-    http::{StatusCode, request::Parts},
+    extract::{Query as _Query, rejection::QueryRejection},
+    http::{Uri, request::Parts},
 };
+use axum_core::extract::FromRequestParts;
 use serde::{
     Deserialize, Deserializer,
     de::{self, DeserializeOwned},
 };
 
-use crate::internal::response::{
+use crate::response::{
     Response,
     json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
-/// Convert an empty string to None instead of returning an error.
+/// Convert empty query to None instead of returning an error.
 ///
 /// ## Example
 ///
@@ -20,12 +21,12 @@ use crate::internal::response::{
 /// use serde::Deserialize;
 /// use jder_axum::extract::query::{
 ///     Query,
-///     empty_to_none,
+///     optional_query,
 /// };
 ///
 /// #[derive(Deserialize)]
 /// struct QueryParams {
-///     #[serde(default, deserialize_with = "empty_to_none")]
+///     #[serde(default, deserialize_with = "optional_query")]
 ///     page: Option<usize>,
 ///     per_page: Option<usize>,
 /// }
@@ -38,7 +39,7 @@ use crate::internal::response::{
 ///     // ...
 /// }
 /// ```
-pub fn empty_to_none<'de, D, T>(de: D) -> Result<Option<T>, D::Error>
+pub fn optional_query<'de, D, T>(de: D) -> Result<Option<T>, D::Error>
 where
     D: Deserializer<'de>,
     T: std::str::FromStr,
@@ -55,7 +56,7 @@ where
 }
 
 /// Extractor that deserializes query strings into some type.
-/// To accept empty string, [`empty_to_none`] should be used.
+/// To accept empty query, [`optional_query`] should be used.
 ///
 /// Check [`Query`](axum::extract::Query) for more information.
 ///
@@ -94,21 +95,45 @@ where
         state: &S,
     ) -> Result<Self, Self::Rejection> {
         match _Query::<T>::from_request_parts(parts, state).await {
-            | Ok(value) => Ok(Self(value.0)),
-            | Err(rejection) => Err(match rejection {
-                | QueryRejection::FailedToDeserializeQueryString(inner) => {
-                    CreateJsonResponse::failure()
-                        .status(inner.status())
-                        .error_code(JsonResponseErrorCode::Parse.as_str())
-                        .error_message(inner.body_text())
-                        .send()
-                },
-                | _ => CreateJsonResponse::failure()
-                    .status(StatusCode::INTERNAL_SERVER_ERROR)
-                    .error_code(JsonResponseErrorCode::Server.as_str())
-                    .error_message(rejection.body_text())
-                    .send(),
-            }),
+            | Ok(val) => Ok(Self(val.0)),
+            | Err(rej) => Err(CreateJsonResponse::failure()
+                .status(rej.status())
+                .error_code(JsonResponseErrorCode::Parse.as_str())
+                .error_message(rej.body_text())
+                .send()),
         }
     }
 }
+
+impl<T> Query<T>
+where
+    T: DeserializeOwned,
+{
+    /// Attempts to construct a [`Query`] from a reference to a [`Uri`].
+    ///
+    /// # Example
+    /// ```no_run
+    /// use axum::http::Uri;
+    /// use jder_axum::extract::Query;
+    /// use serde::Deserialize;
+    ///
+    /// #[derive(Deserialize)]
+    /// struct ExampleParams {
+    ///     foo: String,
+    ///     bar: u32,
+    /// }
+    ///
+    /// let uri: Uri = "http://example.com/path?foo=hello&bar=42".parse().unwrap();
+    /// let result: Query<ExampleParams> = Query::try_from_uri(&uri).unwrap();
+    /// assert_eq!(result.foo, String::from("hello"));
+    /// assert_eq!(result.bar, 42);
+    /// ```
+    pub fn try_from_uri(value: &Uri) -> Result<Self, QueryRejection> {
+        match _Query::<T>::try_from_uri(value) {
+            | Ok(val) => Ok(Self(val.0)),
+            | Err(err) => Err(err),
+        }
+    }
+}
+
+axum_core::__impl_deref!(Query);

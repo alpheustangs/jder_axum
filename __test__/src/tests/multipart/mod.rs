@@ -4,7 +4,7 @@ pub mod file;
 mod test {
     use axum_test::{TestServer, multipart::MultipartForm};
     use jder_axum::{
-        extract::multipart::MultipartFailureResponse,
+        extract::multipart::typed::MultipartFailureResponse,
         response::json::{JsonResponse, JsonResponseErrorCode},
     };
 

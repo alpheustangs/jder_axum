@@ -1,7 +1,7 @@
-use axum::response::{IntoResponse, Response as AxumResponse};
+use axum_core::response::{IntoResponse, Response as AxumResponse};
 use axum_typed_multipart::{BaseMultipart, TypedMultipartError};
 
-use crate::internal::{
+use crate::{
     extract::json::Json,
     response::json::{
         JsonResponse, JsonResponseError, error::JsonResponseErrorCode,
@@ -31,7 +31,8 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
     }
 }
 
-/// Extractor that parses `multipart/form-data` requests.
+/// Extractor that parses `multipart/form-data` requests,
+/// available with `multipart` feature.
 ///
 /// Check [`axum_typed_multipart`] for more information.
 ///
@@ -39,7 +40,7 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
 ///
 /// ```no_run
 /// use axum_typed_multipart::TryFromMultipart;
-/// use jder_axum::extract::Multipart;
+/// use jder_axum::extract::multipart::typed::Multipart;
 ///
 /// #[derive(TryFromMultipart)]
 /// struct Data {
@@ -69,7 +70,7 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
 ///     TryFromMultipart,
 ///     FieldData,
 /// };
-/// use jder_axum::extract::Multipart;
+/// use jder_axum::extract::multipart::typed::Multipart;
 ///
 /// #[derive(TryFromMultipart)]
 /// struct Data {

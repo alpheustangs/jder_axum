@@ -16,7 +16,7 @@ mod test {
         assert_eq!(res.success, false);
         assert_eq!(
             res.error.unwrap().code,
-            JsonResponseErrorCode::Server.to_string()
+            JsonResponseErrorCode::Parse.to_string()
         );
     }
 

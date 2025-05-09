@@ -13,7 +13,7 @@ use axum::{
 pub type Response<B = Body> = _Response<B>;
 
 /// Internal state.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 struct ResponseState<B> {
     status: StatusCode,
     version: Version,
@@ -22,7 +22,7 @@ struct ResponseState<B> {
 }
 
 /// Functions for creating response.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct ResponseFunctions<B> {
     state: ResponseState<B>,
 }
@@ -226,7 +226,7 @@ where
 ///         .body("active")
 /// }
 /// ```
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct CreateResponse;
 
 impl CreateResponse {
