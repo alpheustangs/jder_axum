@@ -1,5 +1,5 @@
 [package]
-name = "__test__"
+name = "tests"
 edition = "2024"
 publish = false
 

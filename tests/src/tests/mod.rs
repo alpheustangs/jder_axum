@@ -6,10 +6,8 @@ pub mod json;
 pub mod matched_path;
 pub mod multipart;
 pub mod nested_path;
-pub mod original_uri;
 pub mod path;
 pub mod query;
-pub mod state;
 pub mod typed_header;
 
 #[cfg(test)]

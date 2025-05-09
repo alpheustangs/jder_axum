@@ -13,7 +13,10 @@ use crate::response::{
     json::{CreateJsonResponse, error::JsonResponseErrorCode},
 };
 
-/// Convert empty query to None instead of returning an error.
+/// Deserializes empty query parameters as `None` instead of empty strings.
+///
+/// This can help prevent unintended values from being parsed into the query struct,
+/// especially when parameters are present but left empty (e.g., `?title=&page=`).
 ///
 /// ## Example
 ///
@@ -21,25 +24,26 @@ use crate::response::{
 /// use serde::Deserialize;
 /// use jder_axum::extract::query::{
 ///     Query,
-///     optional_query,
+///     empty_as_none,
 /// };
 ///
 /// #[derive(Deserialize)]
 /// struct QueryParams {
-///     #[serde(default, deserialize_with = "optional_query")]
+///     #[serde(default, deserialize_with = "empty_as_none")]
 ///     page: Option<usize>,
-///     per_page: Option<usize>,
+///     #[serde(default, deserialize_with = "empty_as_none")]
+///     title: Option<String>,
 /// }
 ///
-/// // /products?page=1&per_page=60
+/// // /products?page=&title=
 /// async fn route(
-///     query: Query<QueryParams>,
+///     Query(query): Query<QueryParams>,
 /// ) {
-///     let query: QueryParams = query.0;
-///     // ...
+///     // page = None
+///     // title = None
 /// }
 /// ```
-pub fn optional_query<'de, D, T>(de: D) -> Result<Option<T>, D::Error>
+pub fn empty_as_none<'de, D, T>(de: D) -> Result<Option<T>, D::Error>
 where
     D: Deserializer<'de>,
     T: std::str::FromStr,
@@ -55,8 +59,9 @@ where
     }
 }
 
-/// Extractor that deserializes query strings into some type.
-/// To accept empty query, [`optional_query`] should be used.
+/// Extractor for deserializing query strings into a specified type.
+///
+/// Can be used with [`empty_as_none`] to treat empty query parameters as `None`.
 ///
 /// Check [`Query`](axum::extract::Query) for more information.
 ///
@@ -74,9 +79,8 @@ where
 ///
 /// // /products?page=1&per_page=60
 /// async fn route(
-///     query: Query<QueryParams>,
+///     Query(query): Query<QueryParams>,
 /// ) {
-///     let query: QueryParams = query.0;
 ///     // ...
 /// }
 /// ```

@@ -9,8 +9,8 @@ pub struct RouteHostResponseData {
     pub host: String,
 }
 
-pub async fn route_host(host: Host) -> Response {
+pub async fn route_host(Host(host): Host) -> Response {
     CreateJsonResponse::success::<RouteHostResponseData>()
-        .data(RouteHostResponseData { host: host.0 })
+        .data(RouteHostResponseData { host })
         .send()
 }

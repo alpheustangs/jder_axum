@@ -7,11 +7,12 @@
 - Move host module to `extra` feature
 - Move matched path module to `matched_path` feature
 - Move multipart module to `typed_multipart` feature
-- Move original URI module to `original_uri` feature
 - Move query module to `query` feature
 - Move connect info module to `tokio` feature
 - Move host module to `extra` feature
-- Rename `empty_to_none` to `optional_query`
+- Rename `empty_to_none` to `empty_as_none`
+- Remove `State` as it is infallible
+- Remove `OriginalUri` as it is infallible
 
 ### What's New
 
@@ -24,7 +25,6 @@
     - `matched_path`
     - `multipart`
     - `typed_multipart`
-    - `original_uri`
     - `query`
     - `tokio`
     - `extra`

@@ -21,9 +21,9 @@ use crate::response::{
 ///
 /// An example of using `TypedHeader` as an extractor:
 ///
-/// ```ignore
+/// ```no_run
 /// use jder_axum::extract::extra::TypedHeader;
-/// use haeders::UserAgent;
+/// use headers::UserAgent;
 ///
 /// async fn route(
 ///     TypedHeader(agent): TypedHeader<UserAgent>,
@@ -34,9 +34,9 @@ use crate::response::{
 ///
 /// An example of using `TypedHeader` as a response:
 ///
-/// ```ignore
+/// ```no_run
 /// use jder_axum::extract::extra::TypedHeader;
-/// use haeders::ContentType;
+/// use headers::ContentType;
 ///
 /// async fn route() -> (TypedHeader<ContentType>, &'static str) {
 ///     (

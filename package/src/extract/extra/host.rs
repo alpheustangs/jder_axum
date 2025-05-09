@@ -17,8 +17,10 @@ use crate::response::{
 /// ```no_run
 /// use jder_axum::extract::extra::Host;
 ///
-/// async fn route(host: Host) {
-///     let host: String = host.0;
+/// async fn route(
+///     Host(host): Host
+/// ) {
+///     // ...
 /// }
 /// ```
 #[derive(Debug, Clone)]

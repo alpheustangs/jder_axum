@@ -5,16 +5,11 @@ pub mod json;
 pub mod matched_path;
 pub mod multipart;
 pub mod nested_path;
-pub mod original_uri;
 pub mod path;
 pub mod query;
-pub mod state;
 pub mod typed_header;
 
-use std::{
-    net::SocketAddr,
-    sync::{Arc, Mutex},
-};
+use std::net::SocketAddr;
 
 use axum::{
     Router,
@@ -32,10 +27,8 @@ use crate::router::matched_path::route_matched_path;
 use crate::router::multipart::file::route_multipart_file;
 use crate::router::multipart::route_multipart;
 use crate::router::nested_path::route_nested_path;
-use crate::router::original_uri::route_original_uri;
 use crate::router::path::route_path;
 use crate::router::query::route_query;
-use crate::router::state::{AppState, route_state};
 use crate::router::typed_header::{
     optional::route_typed_header_optional, route_typed_header,
 };
@@ -46,8 +39,6 @@ pub async fn route_index() -> Response {
 
 /// Create router for the app
 pub fn create_router() -> IntoMakeServiceWithConnectInfo<Router, SocketAddr> {
-    let app_state: AppState = AppState { view: Arc::new(Mutex::new(0)) };
-
     Router::new()
         .route("/", get(route_index))
         .route("/connect_info", post(route_connect_info))
@@ -59,20 +50,15 @@ pub fn create_router() -> IntoMakeServiceWithConnectInfo<Router, SocketAddr> {
         .route("/multipart", post(route_multipart))
         .route("/multipart/file", post(route_multipart_file))
         .route("/nested_path", post(route_nested_path))
-        .route("/original_uri", post(route_original_uri))
         .nest(
             "/{id}",
-            Router::new()
-                .route("/nested_path", post(route_nested_path))
-                .route("/original_uri", post(route_original_uri)),
+            Router::new().route("/nested_path", post(route_nested_path)),
         )
         .route("/path/{id}/{name}", post(route_path))
         .route("/query", post(route_query))
-        .route("/state", post(route_state))
         .route("/typed_header", post(route_typed_header))
         .route("/typed_header/optional", post(route_typed_header_optional))
         .layer(DefaultBodyLimit::disable())
-        .with_state(app_state)
         .into_make_service_with_connect_info::<SocketAddr>()
 }
 

@@ -41,6 +41,7 @@ axum-core = "~0.5.2"
 axum-extra ={ version = "~0.10.1", optional = true }
 axum_typed_multipart = { workspace = true, optional = true }
 bytes = { version = "^1.0.0", optional = true }
+headers = { version = "*", optional = true }
 serde = { workspace = true }
 serde_json = "^1.0.0"
 serde_urlencoded = { version = "~0.7.0", optional = true }
@@ -51,7 +52,6 @@ default = [
     "form",
     "json",
     "matched-path",
-    "original-uri",
     "query",
     "tokio",
 ]
@@ -65,14 +65,13 @@ typed_multipart = [
     "dep:axum_typed_multipart",
 ]
 typed-multipart = ["typed_multipart"]
-original_uri = []
-original-uri = ["original_uri"]
 query = []
 tokio = []
 extra = ["dep:axum-extra"]
 extra_typed_header = [
     "extra",
     "axum-extra/typed-header",
+    "dep:headers",
 ]
 extra-typed-header = ["extra_typed_header"]
 utoipa = ["dep:utoipa"]
@@ -82,7 +81,6 @@ all = [
     "matched-path",
     "multipart",
     "typed-multipart",
-    "original-uri",
     "query",
     "tokio",
     "extra",
