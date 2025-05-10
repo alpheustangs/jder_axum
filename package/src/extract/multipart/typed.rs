@@ -9,15 +9,15 @@ use crate::{
 };
 
 /// Multipart failure response.
-pub type MultipartFailureResponse = JsonResponse<()>;
+pub type TypedMultipartFailureResponse = JsonResponse<()>;
 
-impl IntoResponse for MultipartFailureResponse {
+impl IntoResponse for TypedMultipartFailureResponse {
     fn into_response(self) -> AxumResponse {
         Json(self).into_response()
     }
 }
 
-impl From<TypedMultipartError> for MultipartFailureResponse {
+impl From<TypedMultipartError> for TypedMultipartFailureResponse {
     fn from(error: TypedMultipartError) -> Self {
         Self {
             success: false,
@@ -32,7 +32,7 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
 }
 
 /// Extractor that parses `multipart/form-data` requests,
-/// available with `multipart` feature.
+/// available with `typed_multipart` feature.
 ///
 /// Check [`axum_typed_multipart`] for more information.
 ///
@@ -40,14 +40,14 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
 ///
 /// ```no_run
 /// use axum_typed_multipart::TryFromMultipart;
-/// use jder_axum::extract::multipart::typed::Multipart;
+/// use jder_axum::extract::multipart::typed::TypedMultipart;
 ///
 /// #[derive(TryFromMultipart)]
 /// struct Data {
 ///     name: String,
 /// }
 ///
-/// async fn route(data: Multipart<Data>) {
+/// async fn route(data: TypedMultipart<Data>) {
 ///     // ...
 /// }
 /// ```
@@ -70,7 +70,7 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
 ///     TryFromMultipart,
 ///     FieldData,
 /// };
-/// use jder_axum::extract::multipart::typed::Multipart;
+/// use jder_axum::extract::multipart::typed::TypedMultipart;
 ///
 /// #[derive(TryFromMultipart)]
 /// struct Data {
@@ -78,7 +78,7 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
 ///     image: FieldData<Bytes>,
 /// }
 ///
-/// async fn route(data: Multipart<Data>) {
+/// async fn route(data: TypedMultipart<Data>) {
 ///     // ...
 /// }
 /// ```
@@ -114,4 +114,4 @@ impl From<TypedMultipartError> for MultipartFailureResponse {
 ///     User,
 /// }
 /// ```
-pub type Multipart<T> = BaseMultipart<T, MultipartFailureResponse>;
+pub type TypedMultipart<T> = BaseMultipart<T, TypedMultipartFailureResponse>;

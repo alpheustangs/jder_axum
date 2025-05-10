@@ -8,6 +8,7 @@ pub mod multipart;
 pub mod nested_path;
 pub mod path;
 pub mod query;
+pub mod scheme;
 pub mod typed_header;
 
 #[cfg(test)]

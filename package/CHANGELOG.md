@@ -11,6 +11,8 @@
 - Move connect info module to `tokio` feature
 - Move host module to `extra` feature
 - Rename `empty_to_none` to `empty_as_none`
+- Rename `Multipart` to `TypedMultipart`
+- Rename `MultipartFailureResponse` to `TypedMultipartFailureResponse`
 - Remove `State` as it is infallible
 - Remove `OriginalUri` as it is infallible
 
@@ -18,6 +20,7 @@
 
 - Add support for optional request
 - Add `Form` extractor
+- Add `Scheme` extractor
 - Add `TypedHeader` extractor
 - Add features:
     - `form`

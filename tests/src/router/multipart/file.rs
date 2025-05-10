@@ -4,7 +4,7 @@ use axum::{
 };
 use axum_typed_multipart::{FieldData, TryFromMultipart};
 use jder_axum::{
-    extract::multipart::typed::Multipart,
+    extract::multipart::typed::TypedMultipart,
     response::{CreateResponse, Response, json::CreateJsonResponse},
 };
 
@@ -16,7 +16,7 @@ pub struct RouteMultipartFileData {
 
 #[axum::debug_handler]
 pub async fn route_multipart_file(
-    data: Multipart<RouteMultipartFileData>
+    data: TypedMultipart<RouteMultipartFileData>
 ) -> Response {
     match &data.image {
         | Some(image) => {

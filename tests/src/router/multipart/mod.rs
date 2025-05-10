@@ -2,7 +2,7 @@ pub mod file;
 
 use axum_typed_multipart::TryFromMultipart;
 use jder_axum::{
-    extract::multipart::typed::Multipart,
+    extract::multipart::typed::TypedMultipart,
     response::{Response, json::CreateJsonResponse},
 };
 use serde::{Deserialize, Serialize};
@@ -19,7 +19,9 @@ pub struct RouteMultipartResponseData {
     pub number: Option<usize>,
 }
 
-pub async fn route_multipart(data: Multipart<RouteMultipartData>) -> Response {
+pub async fn route_multipart(
+    data: TypedMultipart<RouteMultipartData>
+) -> Response {
     CreateJsonResponse::success::<RouteMultipartResponseData>()
         .data(RouteMultipartResponseData {
             string: data.string.clone(),

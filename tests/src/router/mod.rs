@@ -7,6 +7,7 @@ pub mod multipart;
 pub mod nested_path;
 pub mod path;
 pub mod query;
+pub mod scheme;
 pub mod typed_header;
 
 use std::net::SocketAddr;
@@ -29,6 +30,7 @@ use crate::router::multipart::route_multipart;
 use crate::router::nested_path::route_nested_path;
 use crate::router::path::route_path;
 use crate::router::query::route_query;
+use crate::router::scheme::route_scheme;
 use crate::router::typed_header::{
     optional::route_typed_header_optional, route_typed_header,
 };
@@ -56,6 +58,7 @@ pub fn create_router() -> IntoMakeServiceWithConnectInfo<Router, SocketAddr> {
         )
         .route("/path/{id}/{name}", post(route_path))
         .route("/query", post(route_query))
+        .route("/scheme", post(route_scheme))
         .route("/typed_header", post(route_typed_header))
         .route("/typed_header/optional", post(route_typed_header_optional))
         .layer(DefaultBodyLimit::disable())

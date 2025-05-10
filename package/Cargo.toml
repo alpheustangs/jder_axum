@@ -68,6 +68,11 @@ typed-multipart = ["typed_multipart"]
 query = []
 tokio = []
 extra = ["dep:axum-extra"]
+extra_scheme = [
+    "extra",
+    "axum-extra/scheme",
+]
+extra-scheme = ["extra_scheme"]
 extra_typed_header = [
     "extra",
     "axum-extra/typed-header",
@@ -84,6 +89,7 @@ all = [
     "query",
     "tokio",
     "extra",
+    "extra_scheme",
     "extra_typed_header",
     "utoipa",
 ]

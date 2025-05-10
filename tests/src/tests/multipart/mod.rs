@@ -4,7 +4,7 @@ pub mod file;
 mod test {
     use axum_test::{TestServer, multipart::MultipartForm};
     use jder_axum::{
-        extract::multipart::typed::MultipartFailureResponse,
+        extract::multipart::typed::TypedMultipartFailureResponse,
         response::json::{JsonResponse, JsonResponseErrorCode},
     };
 
@@ -39,8 +39,10 @@ mod test {
     async fn test_error_nobody() {
         let server: TestServer = create_server();
 
-        let res: MultipartFailureResponse =
-            server.post("/multipart").await.json::<MultipartFailureResponse>();
+        let res: TypedMultipartFailureResponse = server
+            .post("/multipart")
+            .await
+            .json::<TypedMultipartFailureResponse>();
 
         assert_eq!(res.success, false);
         assert_eq!(
@@ -53,11 +55,11 @@ mod test {
     async fn test_error_empty_body() {
         let server: TestServer = create_server();
 
-        let res: MultipartFailureResponse = server
+        let res: TypedMultipartFailureResponse = server
             .post("/multipart")
             .multipart(MultipartForm::new())
             .await
-            .json::<MultipartFailureResponse>();
+            .json::<TypedMultipartFailureResponse>();
 
         assert_eq!(res.success, false);
         assert_eq!(
@@ -74,11 +76,11 @@ mod test {
             .add_text("string", "String")
             .add_text("number", "1A");
 
-        let res: MultipartFailureResponse = server
+        let res: TypedMultipartFailureResponse = server
             .post("/multipart")
             .multipart(form)
             .await
-            .json::<MultipartFailureResponse>();
+            .json::<TypedMultipartFailureResponse>();
 
         assert_eq!(res.success, false);
         assert_eq!(
