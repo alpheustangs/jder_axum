@@ -1,4 +1,4 @@
-use axum::http::{Error as HTTPError, HeaderName, HeaderValue};
+use http::{Error as HTTPError, HeaderName, HeaderValue};
 
 /// Convert a key into a header name.
 ///

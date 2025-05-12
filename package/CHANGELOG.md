@@ -22,6 +22,7 @@
 - Add `Form` extractor
 - Add `Scheme` extractor
 - Add `TypedHeader` extractor
+- Add `RequestBodyLimit` layer
 - Add features:
     - `form`
     - `json`
@@ -30,6 +31,7 @@
     - `typed_multipart`
     - `query`
     - `tokio`
+    - `request_body_limit`
     - `extra`
     - `extra_typed_header`
     - `utoipa`
@@ -63,7 +65,7 @@ Update Multipart extractor path:
 
 ```diff
 - use jder_axum::extract::Multipart;
-+ use jder_axum::extract::multipart:typed::Multipart;
++ use jder_axum::extract::multipart:TypedMultipart;
 ```
 
 ## 0.4.0 (2025-01-09)

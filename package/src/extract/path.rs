@@ -1,5 +1,6 @@
-use axum::{extract::Path as _Path, http::request::Parts};
+use axum::extract::Path as _Path;
 use axum_core::extract::{FromRequestParts, OptionalFromRequestParts};
+use http::request::Parts;
 use serde::de::DeserializeOwned;
 
 use crate::response::{

@@ -18,7 +18,10 @@ use axum::{
     routing::{get, post},
 };
 use axum_test::TestServer;
-use jder_axum::response::{Response, json::CreateJsonResponse};
+use jder_axum::{
+    layers::RequestBodyLimit,
+    response::{Response, json::CreateJsonResponse},
+};
 
 use crate::router::connect_info::route_connect_info;
 use crate::router::form::route_form;
@@ -62,6 +65,7 @@ pub fn create_router() -> IntoMakeServiceWithConnectInfo<Router, SocketAddr> {
         .route("/typed_header", post(route_typed_header))
         .route("/typed_header/optional", post(route_typed_header_optional))
         .layer(DefaultBodyLimit::disable())
+        .layer(RequestBodyLimit::max(10 * 1024 * 1024))
         .into_make_service_with_connect_info::<SocketAddr>()
 }
 

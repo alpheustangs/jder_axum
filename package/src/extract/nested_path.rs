@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
-use axum::{extract::NestedPath as _NestedPath, http::request::Parts};
+use axum::extract::NestedPath as _NestedPath;
 use axum_core::extract::FromRequestParts;
+use http::request::Parts;
 
 use crate::response::{
     Response,

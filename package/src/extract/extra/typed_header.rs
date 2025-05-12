@@ -1,4 +1,3 @@
-use axum::http::{StatusCode, request::Parts};
 use axum_core::{
     extract::{FromRequestParts, OptionalFromRequestParts},
     response::{IntoResponse, IntoResponseParts, ResponseParts},
@@ -7,6 +6,7 @@ use axum_extra::{
     extract::TypedHeader as _TypedHeader,
     headers::{Header, HeaderMapExt as _},
 };
+use http::{StatusCode, request::Parts};
 
 use crate::response::{
     Response,

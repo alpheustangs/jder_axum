@@ -1,6 +1,6 @@
-use axum::http::request::Parts;
 use axum_core::extract::FromRequestParts;
 use axum_extra::extract::Host as _Host;
+use http::request::Parts;
 
 use crate::response::{
     Response,

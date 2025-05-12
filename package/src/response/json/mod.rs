@@ -8,12 +8,9 @@ pub use crate::response::json::failure::JsonFailureResponseFunctions;
 
 pub use crate::response::json::error::JsonResponseErrorCode;
 
-use axum::{
-    body::Body,
-    http::{
-        HeaderMap, HeaderValue, StatusCode, Version, header, response::Builder,
-    },
-    response::Response,
+use axum_core::{body::Body, response::Response};
+use http::{
+    HeaderMap, HeaderValue, StatusCode, Version, header, response::Builder,
 };
 use serde::{Deserialize, Serialize};
 

@@ -40,7 +40,7 @@ impl From<TypedMultipartError> for TypedMultipartFailureResponse {
 ///
 /// ```no_run
 /// use axum_typed_multipart::TryFromMultipart;
-/// use jder_axum::extract::multipart::typed::TypedMultipart;
+/// use jder_axum::extract::multipart::TypedMultipart;
 ///
 /// #[derive(TryFromMultipart)]
 /// struct Data {
@@ -70,7 +70,7 @@ impl From<TypedMultipartError> for TypedMultipartFailureResponse {
 ///     TryFromMultipart,
 ///     FieldData,
 /// };
-/// use jder_axum::extract::multipart::typed::TypedMultipart;
+/// use jder_axum::extract::multipart::TypedMultipart;
 ///
 /// #[derive(TryFromMultipart)]
 /// struct Data {

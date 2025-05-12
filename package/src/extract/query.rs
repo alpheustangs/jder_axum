@@ -1,8 +1,6 @@
-use axum::{
-    extract::{Query as _Query, rejection::QueryRejection},
-    http::{Uri, request::Parts},
-};
+use axum::extract::{Query as _Query, rejection::QueryRejection};
 use axum_core::extract::FromRequestParts;
+use http::{Uri, request::Parts};
 use serde::{
     Deserialize, Deserializer,
     de::{self, DeserializeOwned},

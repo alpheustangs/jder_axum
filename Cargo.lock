@@ -935,9 +935,14 @@ dependencies = [
  "axum_typed_multipart",
  "bytes",
  "headers",
+ "http",
+ "http-body",
+ "http-body-util",
  "serde",
  "serde_json",
  "serde_urlencoded",
+ "tower-layer",
+ "tower-service",
  "utoipa",
 ]
 

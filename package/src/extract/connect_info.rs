@@ -1,5 +1,6 @@
-use axum::{extract::ConnectInfo as _ConnectInfo, http::request::Parts};
+use axum::extract::ConnectInfo as _ConnectInfo;
 use axum_core::extract::FromRequestParts;
+use http::request::Parts;
 
 use crate::response::{
     Response,

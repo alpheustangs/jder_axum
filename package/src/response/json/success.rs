@@ -1,6 +1,4 @@
-use axum::http::{
-    Error as HTTPError, HeaderName, HeaderValue, StatusCode, Version,
-};
+use http::{Error as HTTPError, HeaderName, HeaderValue, StatusCode, Version};
 use serde::Serialize;
 
 use crate::response::{

@@ -3,6 +3,8 @@
 pub enum JsonResponseErrorCode {
     /// Error while parsing.
     Parse,
+    /// Payload too large.
+    TooLarge,
     /// Internal server error.
     Server,
     /// Unknown error.
@@ -14,6 +16,7 @@ impl JsonResponseErrorCode {
     pub fn as_str(&self) -> &str {
         match self {
             | Self::Parse => "parse",
+            | Self::TooLarge => "too_large",
             | Self::Server => "server",
             | Self::Unknown => "unknown",
         }

@@ -1,12 +1,10 @@
 pub mod header;
 pub mod json;
 
-use axum::{
-    body::Body,
-    http::{
-        Error as HTTPError, HeaderMap, HeaderName, HeaderValue,
-        Response as _Response, StatusCode, Version, response::Builder,
-    },
+use axum_core::body::Body;
+use http::{
+    Error as HTTPError, HeaderMap, HeaderName, HeaderValue,
+    Response as _Response, StatusCode, Version, response::Builder,
 };
 
 /// Response for routes.

@@ -42,16 +42,21 @@ axum-extra ={ version = "~0.10.1", optional = true }
 axum_typed_multipart = { workspace = true, optional = true }
 bytes = { version = "^1.0.0", optional = true }
 headers = { version = "*", optional = true }
+http = "^1.0.0"
+http-body = { version = "^1.0.0", optional = true }
+http-body-util = { version = "~0.1.0", optional = true }
 serde = { workspace = true }
 serde_json = "^1.0.0"
 serde_urlencoded = { version = "~0.7.0", optional = true }
+tower-layer = { version = "~0.3.0", optional = true }
+tower-service = { version = "~0.3.0", optional = true }
 utoipa = { version = "^5.0.0", optional = true }
 
 [features]
 default = [
     "form",
     "json",
-    "matched-path",
+    "matched_path",
     "query",
     "tokio",
 ]
@@ -79,17 +84,25 @@ extra_typed_header = [
     "dep:headers",
 ]
 extra-typed-header = ["extra_typed_header"]
+request_body_limit = [
+    "dep:http-body",
+    "dep:http-body-util",
+    "dep:tower-layer",
+    "dep:tower-service",
+]
+request-body-limit = ["request_body_limit"]
 utoipa = ["dep:utoipa"]
 all = [
     "form",
     "json",
     "matched-path",
     "multipart",
-    "typed-multipart",
+    "typed_multipart",
     "query",
     "tokio",
     "extra",
     "extra_scheme",
     "extra_typed_header",
+    "request_body_limit",
     "utoipa",
 ]

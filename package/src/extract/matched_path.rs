@@ -1,10 +1,8 @@
 use std::sync::Arc;
 
-use axum::{
-    extract::MatchedPath as _MatchedPath,
-    http::{StatusCode, request::Parts},
-};
+use axum::extract::MatchedPath as _MatchedPath;
 use axum_core::extract::{FromRequestParts, OptionalFromRequestParts};
+use http::{StatusCode, request::Parts};
 
 use crate::response::{
     Response,
