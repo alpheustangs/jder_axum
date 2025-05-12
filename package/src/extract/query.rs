@@ -120,14 +120,14 @@ where
     /// use jder_axum::extract::Query;
     ///
     /// #[derive(Deserialize)]
-    /// struct ExampleParams {
+    /// struct Params {
     ///     str: String,
     ///     num: u32,
     /// }
     ///
     /// let uri: Uri = "http://example.com/path?str=hello&num=42".parse().unwrap();
     ///
-    /// let result: Query<ExampleParams> = Query::try_from_uri(&uri).unwrap();
+    /// let result: Query<Params> = Query::try_from_uri(&uri).unwrap();
     ///
     /// assert_eq!(result.str, String::from("hello"));
     /// assert_eq!(result.num, 42);

@@ -54,18 +54,38 @@ Update `Cargo.toml`:
 + jder_axum = { version = "0.5.0", features = ["extra", "typed_multipart"] }
 ```
 
-Update Host extractor path:
+Update `Host` extractor path:
 
 ```diff
 - use jder_axum::extract::Host;
-+ use jder_axum::extract::extra:Host;
++ use jder_axum::extract::extra::Host;
 ```
 
-Update Multipart extractor path:
+Update path of `TypedMultipart` and `TypedMultipartFailureResponse`:
 
 ```diff
 - use jder_axum::extract::Multipart;
-+ use jder_axum::extract::multipart:TypedMultipart;
++ use jder_axum::extract::multipart::TypedMultipart;
+
+- use jder_axum::extract::MultipartFailureResponse;
++ use jder_axum::extract::multipart::typed::TypedMultipartFailureResponse;
+```
+
+Use extractors from `axum`:
+
+```diff
+- use jder_axum::extract::State;
++ use axum::extract::State;
+
+- use jder_axum::extract::OriginalUri;
++ use axum::extract::OriginalUri;
+```
+
+Update function name:
+
+```diff
+- use jder_axum::extract::query::empty_to_none;
++ use jder_axum::extract::query::empty_as_none;
 ```
 
 ## 0.4.0 (2025-01-09)
