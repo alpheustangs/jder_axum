@@ -100,7 +100,7 @@ where
 ///
 /// let app: Router = Router::new()
 ///     .layer(DefaultBodyLimit::disable())
-///     .layer(RequestBodyLimit::max(10 * 1024 * 1024)); // 10MiB
+///     .layer(RequestBodyLimit::max(10 * 1024 * 1024));
 /// ```
 #[derive(Debug, Clone, Copy)]
 pub struct RequestBodyLimit {
@@ -108,7 +108,15 @@ pub struct RequestBodyLimit {
 }
 
 impl RequestBodyLimit {
-    /// Set the request body limit.
+    /// Set the request body limit in bytes.
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// use jder_axum::layers::RequestBodyLimit;
+    ///
+    /// RequestBodyLimit::max(10 * 1024 * 1024); // 10MiB
+    /// ```
     pub fn max(limit: usize) -> Self {
         Self { limit }
     }

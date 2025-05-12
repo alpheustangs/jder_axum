@@ -115,20 +115,22 @@ where
     ///
     /// # Example
     /// ```no_run
+    /// use serde::Deserialize;
     /// use axum::http::Uri;
     /// use jder_axum::extract::Query;
-    /// use serde::Deserialize;
     ///
     /// #[derive(Deserialize)]
     /// struct ExampleParams {
-    ///     foo: String,
-    ///     bar: u32,
+    ///     str: String,
+    ///     num: u32,
     /// }
     ///
-    /// let uri: Uri = "http://example.com/path?foo=hello&bar=42".parse().unwrap();
+    /// let uri: Uri = "http://example.com/path?str=hello&num=42".parse().unwrap();
+    ///
     /// let result: Query<ExampleParams> = Query::try_from_uri(&uri).unwrap();
-    /// assert_eq!(result.foo, String::from("hello"));
-    /// assert_eq!(result.bar, 42);
+    ///
+    /// assert_eq!(result.str, String::from("hello"));
+    /// assert_eq!(result.num, 42);
     /// ```
     pub fn try_from_uri(value: &Uri) -> Result<Self, QueryRejection> {
         match _Query::<T>::try_from_uri(value) {

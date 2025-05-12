@@ -23,7 +23,7 @@ categories = [
     "web-programming",
 ]
 include = [
-    "src/*", 
+    "src/*",
     "Cargo.toml",
     "README.md",
 ]
