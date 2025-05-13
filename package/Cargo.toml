@@ -1,6 +1,6 @@
 [package]
 name = "jder_axum"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Alpheus Tang"]
 edition = "2024"
 rust-version = "1.85.0"
@@ -23,20 +23,86 @@ categories = [
     "web-programming",
 ]
 include = [
-    "src/*", 
+    "src/*",
     "Cargo.toml",
     "README.md",
 ]
+
+[package.metadata.docs.rs]
+features = ["all"]
 
 [lib]
 name = "jder_axum"
 path = "src/lib.rs"
 
 [dependencies]
-axum ={ workspace = true }
-axum-core = "~0.5.1"
-axum-extra = "~0.10.0"
-axum_typed_multipart = { workspace = true }
-bytes = "^1.10.1"
+axum = { workspace = true }
+axum-core = "~0.5.2"
+axum-extra ={ version = "~0.10.1", optional = true }
+axum_typed_multipart = { workspace = true, optional = true }
+bytes = { version = "^1.0.0", optional = true }
+headers = { version = "*", optional = true }
+http = "^1.0.0"
+http-body = { version = "^1.0.0", optional = true }
+http-body-util = { version = "~0.1.0", optional = true }
 serde = { workspace = true }
-serde_json = "^1.0.140"
+serde_json = "^1.0.0"
+serde_urlencoded = { version = "~0.7.0", optional = true }
+tower-layer = { version = "~0.3.0", optional = true }
+tower-service = { version = "~0.3.0", optional = true }
+utoipa = { version = "^5.0.0", optional = true }
+
+[features]
+default = [
+    "form",
+    "json",
+    "matched_path",
+    "query",
+    "tokio",
+]
+form = ["dep:serde_urlencoded"]
+json = ["dep:bytes"]
+matched_path = []
+matched-path = ["matched_path"]
+multipart = []
+typed_multipart = [
+    "multipart",
+    "dep:axum_typed_multipart",
+]
+typed-multipart = ["typed_multipart"]
+query = []
+tokio = []
+extra = ["dep:axum-extra"]
+extra_scheme = [
+    "extra",
+    "axum-extra/scheme",
+]
+extra-scheme = ["extra_scheme"]
+extra_typed_header = [
+    "extra",
+    "axum-extra/typed-header",
+    "dep:headers",
+]
+extra-typed-header = ["extra_typed_header"]
+request_body_limit = [
+    "dep:http-body",
+    "dep:http-body-util",
+    "dep:tower-layer",
+    "dep:tower-service",
+]
+request-body-limit = ["request_body_limit"]
+utoipa = ["dep:utoipa"]
+all = [
+    "form",
+    "json",
+    "matched-path",
+    "multipart",
+    "typed_multipart",
+    "query",
+    "tokio",
+    "extra",
+    "extra_scheme",
+    "extra_typed_header",
+    "request_body_limit",
+    "utoipa",
+]

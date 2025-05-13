@@ -1,3 +1,93 @@
+## 0.5.0
+
+### Breaking Changes
+
+- Move form module to `form` feature
+- Move json module to `json` feature
+- Move host module to `extra` feature
+- Move matched path module to `matched_path` feature
+- Move multipart module to `typed_multipart` feature
+- Move query module to `query` feature
+- Move connect info module to `tokio` feature
+- Move host module to `extra` feature
+- Rename `empty_to_none` to `empty_as_none`
+- Rename `Multipart` to `TypedMultipart`
+- Rename `MultipartFailureResponse` to `TypedMultipartFailureResponse`
+- Remove `State` as it is infallible
+- Remove `OriginalUri` as it is infallible
+
+### What's New
+
+- Add support for optional request
+- Add `Form` extractor
+- Add `Scheme` extractor
+- Add `TypedHeader` extractor
+- Add `RequestBodyLimit` layer
+- Add features:
+    - `form`
+    - `json`
+    - `matched_path`
+    - `multipart`
+    - `typed_multipart`
+    - `query`
+    - `tokio`
+    - `request_body_limit`
+    - `extra`
+    - `extra_typed_header`
+    - `utoipa`
+- Add new derive to struct for `utoipa` feature:
+    - `JsonResponse`
+    - `JsonResponseError`
+
+### What's Changed
+
+- Update minimum `axum` version to `0.8.3`
+- Update to 2024 edition
+
+### Migrating from 0.4.0 to 0.5.0
+
+Update `Cargo.toml`:
+
+```diff
+[dependencies]
+- jder_axum = "0.4.0"
++ jder_axum = { version = "0.5.0", features = ["extra", "typed_multipart"] }
+```
+
+Update `Host` extractor path:
+
+```diff
+- use jder_axum::extract::Host;
++ use jder_axum::extract::extra::Host;
+```
+
+Update path of `TypedMultipart` and `TypedMultipartFailureResponse`:
+
+```diff
+- use jder_axum::extract::Multipart;
++ use jder_axum::extract::multipart::TypedMultipart;
+
+- use jder_axum::extract::MultipartFailureResponse;
++ use jder_axum::extract::multipart::typed::TypedMultipartFailureResponse;
+```
+
+Use extractors from `axum`:
+
+```diff
+- use jder_axum::extract::State;
++ use axum::extract::State;
+
+- use jder_axum::extract::OriginalUri;
++ use axum::extract::OriginalUri;
+```
+
+Update function name:
+
+```diff
+- use jder_axum::extract::query::empty_to_none;
++ use jder_axum::extract::query::empty_as_none;
+```
+
 ## 0.4.0 (2025-01-09)
 
 ### What's Changed
