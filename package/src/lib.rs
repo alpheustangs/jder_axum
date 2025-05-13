@@ -1,7 +1,7 @@
 //! # JDER axum
 //!
 //! A response builder for axum.
-//! 
+//!
 //! This package includes different axum response builders,
 //! extractors and layers based on the JSON response structure specified in
 //! [JSON Data Error Response (JDER)](https://github.com/alpheustangs/jder).
