@@ -20,7 +20,6 @@ pub struct RequestBodyLimitService<S> {
 impl<B, S> Service<Request<B>> for RequestBodyLimitService<S>
 where
     S: Service<Request<B>, Response = Res> + Clone + Send + 'static,
-    S::Error: Into<axum::BoxError> + Send + Sync + 'static,
     S::Future: Send + 'static,
     B: Body + Send + From<bytes::Bytes> + 'static,
     B::Data: Send + 'static,

@@ -1,6 +1,6 @@
 [package]
 name = "jder_axum"
-version = "0.5.0"
+version = "0.6.0"
 authors = ["Alpheus Tang"]
 edition = "2024"
 rust-version = "1.85.0"
@@ -48,6 +48,7 @@ http-body-util = { version = "~0.1.0", optional = true }
 serde = { workspace = true }
 serde_json = "^1.0.0"
 serde_urlencoded = { version = "~0.7.0", optional = true }
+tokio = { version = "^1.40.0", optional = true }
 tower-layer = { version = "~0.3.0", optional = true }
 tower-service = { version = "~0.3.0", optional = true }
 utoipa = { version = "^5.0.0", optional = true }
@@ -60,38 +61,74 @@ default = [
     "query",
     "tokio",
 ]
-form = ["dep:serde_urlencoded"]
-json = ["dep:bytes"]
-matched_path = []
-matched-path = ["matched_path"]
-multipart = []
+form = [
+    "axum/form",
+    "dep:serde_urlencoded",
+]
+json = [
+    "axum/json",
+    "dep:bytes",
+]
+matched_path = [
+    "axum/matched-path",
+]
+matched-path = [
+    "matched_path",
+]
+multipart = [
+    "axum/multipart",
+]
 typed_multipart = [
     "multipart",
     "dep:axum_typed_multipart",
 ]
-typed-multipart = ["typed_multipart"]
-query = []
-tokio = []
-extra = ["dep:axum-extra"]
+typed-multipart = [
+    "typed_multipart",
+]
+query = [
+    "axum/query",
+]
+tokio = [
+    "axum/tokio",
+]
+extra = [
+    "dep:axum-extra",
+]
 extra_scheme = [
     "extra",
     "axum-extra/scheme",
 ]
-extra-scheme = ["extra_scheme"]
+extra-scheme = [
+    "extra_scheme",
+]
 extra_typed_header = [
     "extra",
     "axum-extra/typed-header",
     "dep:headers",
 ]
-extra-typed-header = ["extra_typed_header"]
+extra-typed-header = [
+    "extra_typed_header",
+]
 request_body_limit = [
     "dep:http-body",
     "dep:http-body-util",
     "dep:tower-layer",
     "dep:tower-service",
 ]
-request-body-limit = ["request_body_limit"]
-utoipa = ["dep:utoipa"]
+request-body-limit = [
+    "request_body_limit",
+]
+request_time_limit = [
+    "dep:tokio",
+    "dep:tower-layer",
+    "dep:tower-service",
+]
+request-time-limit = [
+    "request_time_limit",
+]
+utoipa = [
+    "dep:utoipa",
+]
 all = [
     "form",
     "json",
@@ -104,5 +141,6 @@ all = [
     "extra_scheme",
     "extra_typed_header",
     "request_body_limit",
+    "request_time_limit",
     "utoipa",
 ]

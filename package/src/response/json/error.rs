@@ -5,6 +5,8 @@ pub enum JsonResponseErrorCode {
     Parse,
     /// Payload too large.
     TooLarge,
+    /// Timeout error.
+    Timeout,
     /// Internal server error.
     Server,
     /// Unknown error.
@@ -17,6 +19,7 @@ impl JsonResponseErrorCode {
         match self {
             | Self::Parse => "parse",
             | Self::TooLarge => "too_large",
+            | Self::Timeout => "timeout",
             | Self::Server => "server",
             | Self::Unknown => "unknown",
         }

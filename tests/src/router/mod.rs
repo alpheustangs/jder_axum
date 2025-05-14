@@ -7,6 +7,8 @@ pub mod multipart;
 pub mod nested_path;
 pub mod path;
 pub mod query;
+pub mod request_body_limit;
+pub mod request_time_limit;
 pub mod scheme;
 pub mod typed_header;
 
@@ -18,10 +20,9 @@ use axum::{
     routing::{get, post},
 };
 use axum_test::TestServer;
-use jder_axum::{
-    layers::RequestBodyLimit,
-    response::{Response, json::CreateJsonResponse},
-};
+use jder_axum::response::{Response, json::CreateJsonResponse};
+use request_body_limit::router_request_body_limit;
+use request_time_limit::router_request_time_limit;
 
 use crate::router::connect_info::route_connect_info;
 use crate::router::form::route_form;
@@ -64,8 +65,9 @@ pub fn create_router() -> IntoMakeServiceWithConnectInfo<Router, SocketAddr> {
         .route("/scheme", post(route_scheme))
         .route("/typed_header", post(route_typed_header))
         .route("/typed_header/optional", post(route_typed_header_optional))
+        .nest("/request_body_limit", router_request_body_limit())
+        .nest("/request_time_limit", router_request_time_limit())
         .layer(DefaultBodyLimit::disable())
-        .layer(RequestBodyLimit::max(10 * 1024 * 1024))
         .into_make_service_with_connect_info::<SocketAddr>()
 }
 

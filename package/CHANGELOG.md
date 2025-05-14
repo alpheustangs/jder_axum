@@ -1,3 +1,13 @@
+## 0.6.0
+
+### What's New
+
+- Add `RequestTimeLimit` layer
+
+### What's Changed
+
+- Remove unnecessary implementation in `RequestBodyLimit` layer
+
 ## 0.5.0 (2025-05-13)
 
 ### Breaking Changes
