@@ -46,7 +46,7 @@ where
 
         Box::pin(async move {
             match tokio::time::timeout(limit, fut).await {
-                | Ok(result) => result,
+                | Ok(res) => res,
                 | Err(_) => {
                     let res: Res = CreateJsonResponse::failure()
                         .status(StatusCode::REQUEST_TIMEOUT)
