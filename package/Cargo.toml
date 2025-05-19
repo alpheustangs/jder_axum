@@ -8,8 +8,8 @@ description = """
 A response builder for axum
 """
 readme = "README.md"
-homepage = "https://github.com/alpheustangs/jder_axum"
-repository = "https://github.com/alpheustangs/jder_axum"
+homepage = "https://github.com/jder-std/axum"
+repository = "https://github.com/jder-std/axum"
 license = "MIT"
 keywords = [
     "jder",

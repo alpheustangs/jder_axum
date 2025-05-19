@@ -2,7 +2,7 @@
 
 A response builder for axum.
 
-This package includes different axum response builders, extractors and layers based on the JSON response structure specified in [JSON Data Error Response (JDER)](https://github.com/alpheustangs/jder). With the builders and extractors provided, various kinds of responses can be created easily instead of sending plain text responses.
+This package includes different axum response builders, extractors and layers based on the JSON response structure specified in [JSON Data Error Response (JDER)](https://github.com/jder-std/spec). With the builders and extractors provided, various kinds of responses can be created easily instead of sending plain text responses.
 
 ## Installation
 
