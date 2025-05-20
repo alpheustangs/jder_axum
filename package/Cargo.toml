@@ -132,7 +132,7 @@ utoipa = [
 all = [
     "form",
     "json",
-    "matched-path",
+    "matched_path",
     "multipart",
     "typed_multipart",
     "query",
