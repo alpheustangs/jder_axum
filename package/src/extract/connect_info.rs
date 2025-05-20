@@ -14,7 +14,7 @@ use crate::response::{
 ///
 /// ## Example
 ///
-/// ```ignore
+/// ```no_run
 /// use std::net::{IpAddr, SocketAddr};
 ///
 /// use axum::{
