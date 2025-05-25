@@ -62,6 +62,19 @@ where
 
 /// Layer for configuring the request time limit.
 ///
+/// Following error will be returned if the request time exceeds the limit:
+///
+/// ```jsonc
+/// // Status: 408
+/// {
+///     "success": false,
+///     "data": null,
+///     "error": {
+///         "code": "timeout"
+///     }
+/// }
+/// ```
+///
 /// ## Example
 ///
 /// ```no_run

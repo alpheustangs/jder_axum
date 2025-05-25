@@ -88,6 +88,20 @@ where
 
 /// Layer for configuring the request body limit.
 ///
+/// Following error will be returned if the request body exceeds the limit:
+///
+/// ```jsonc
+/// // Status: 413
+/// {
+///     "success": false,
+///     "data": null,
+///     "error": {
+///         "code": "too_large",
+///         "field": "body"
+///     }
+/// }
+/// ```
+///
 /// ## Example
 ///
 /// ```no_run
