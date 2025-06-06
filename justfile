@@ -17,7 +17,7 @@ lint:
     typos
     cargo check
     cargo clippy
-    cargo test -p jder_axum --all-features -- --nocapture
+    cargo test -p jder_axum -- --nocapture
 
 # Format code
 fmt:
