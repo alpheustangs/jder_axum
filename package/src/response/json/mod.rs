@@ -149,7 +149,7 @@ pub(crate) fn create_json_response_send<D: Serialize>(
 /// }
 /// ```
 ///
-/// A sucesss JSON response:
+/// A success JSON response:
 ///
 /// ```no_run
 /// use jder_axum::response::{

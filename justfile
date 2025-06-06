@@ -1,0 +1,32 @@
+set shell := ["bash", "-cu"]
+set windows-shell := ["powershell"]
+
+# Default action
+_:
+    just lint
+    just fmt
+    just test
+
+# Setup
+setup:
+    brew install ls-lint typos-cli
+
+# Lint code
+lint:
+    ls-lint
+    typos
+    cargo check
+    cargo clippy
+    cargo test -p jder_axum --all-features -- --nocapture
+
+# Format code
+fmt:
+    cargo fmt
+
+# Test code
+test:
+    cargo test -p tests -- --nocapture
+
+# Clean
+clean:
+    cargo clean

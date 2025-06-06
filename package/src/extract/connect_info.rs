@@ -20,9 +20,9 @@ use crate::response::{
 /// use axum::{
 ///     Router,
 ///     routing::get,
+///     extract::connect_info::IntoMakeServiceWithConnectInfo,
 /// };
 /// use jder_axum::extract::ConnectInfo;
-/// use tokio::net::TcpListener;
 ///
 /// async fn route(
 ///     ConnectInfo(addr): ConnectInfo<SocketAddr>
@@ -34,13 +34,10 @@ use crate::response::{
 /// }
 ///
 /// async fn example(){
-///     let router: Router = Router::new()
-///         .route("/", get(route));
-///
-///     axum::serve(
-///         TcpListener::bind("0.0.0.0:4001").await.unwrap(),
-///         router.into_make_service_with_connect_info::<SocketAddr>()
-///     ).await.unwrap();
+///     let router: IntoMakeServiceWithConnectInfo<Router, SocketAddr> =
+///         Router::new()
+///             .route("/", get(route))
+///             .into_make_service_with_connect_info::<SocketAddr>();
 /// }
 /// ```
 #[derive(Debug, Clone, Copy)]

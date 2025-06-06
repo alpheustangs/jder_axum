@@ -1,0 +1,12 @@
+ls:
+    .dir: snake_case
+    .rs: snake_case
+
+ignore:
+    - .git
+    - .github
+    - __MACOSX
+    - "**/__MACOSX"
+    - .DS_Store
+    - "**/.DS_Store"
+    - target
