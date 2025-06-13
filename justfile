@@ -23,9 +23,13 @@ lint:
 fmt:
     cargo fmt
 
-# Test code
+# Run tests
 test:
     cargo test -p tests -- --nocapture
+
+# Run test server
+server:
+    cargo run -p tests
 
 # Clean
 clean:
