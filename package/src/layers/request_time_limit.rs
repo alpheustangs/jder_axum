@@ -9,6 +9,9 @@ use crate::response::{
     json::{CreateJsonResponse, JsonResponseErrorCode},
 };
 
+/// Default maximum time in seconds.
+pub const REQUEST_TIME_LIMIT_DEFAULT: u64 = 5;
+
 #[derive(Debug, Clone, Copy)]
 pub struct RequestTimeLimitService<S> {
     inner: S,
@@ -92,6 +95,20 @@ pub struct RequestTimeLimit {
 }
 
 impl RequestTimeLimit {
+    /// Create a new `RequestTimeLimit` layer
+    /// with [REQUEST_TIME_LIMIT_DEFAULT].
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// use jder_axum::layers::RequestTimeLimit;
+    ///
+    /// RequestTimeLimit::new();
+    /// ```
+    pub fn new() -> Self {
+        Self { limit: Duration::from_secs(REQUEST_TIME_LIMIT_DEFAULT) }
+    }
+
     /// Set the request time limit with [`Duration`].
     ///
     /// ## Example
@@ -105,6 +122,12 @@ impl RequestTimeLimit {
     /// ```
     pub fn max(limit: Duration) -> Self {
         Self { limit }
+    }
+}
+
+impl Default for RequestTimeLimit {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

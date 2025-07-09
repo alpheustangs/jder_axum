@@ -11,6 +11,9 @@ use crate::response::{
     json::{CreateJsonResponse, JsonResponseErrorCode},
 };
 
+/// Default maximum body size in bytes.
+pub const REQUEST_BODY_LIMIT_DEFAULT: usize = 10 * 1024 * 1024;
+
 #[derive(Debug, Clone, Copy)]
 pub struct RequestBodyLimitService<S> {
     inner: S,
@@ -121,6 +124,20 @@ pub struct RequestBodyLimit {
 }
 
 impl RequestBodyLimit {
+    /// Create a new `RequestBodyLimit` layer
+    /// with [REQUEST_BODY_LIMIT_DEFAULT].
+    ///
+    /// ## Example
+    ///
+    /// ```no_run
+    /// use jder_axum::layers::RequestBodyLimit;
+    ///
+    /// RequestBodyLimit::new();
+    /// ```
+    pub fn new() -> Self {
+        Self { limit: REQUEST_BODY_LIMIT_DEFAULT }
+    }
+
     /// Set the request body limit in bytes.
     ///
     /// ## Example
@@ -132,6 +149,12 @@ impl RequestBodyLimit {
     /// ```
     pub fn max(limit: usize) -> Self {
         Self { limit }
+    }
+}
+
+impl Default for RequestBodyLimit {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
